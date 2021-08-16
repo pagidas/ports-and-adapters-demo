@@ -6,9 +6,17 @@ class CardWalletLogic(
 ): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet {
-        return Wallet(idFactory(), walletHolder)
+        return Wallet.empty(idFactory(), walletHolder)
             .also { repo.save(it) }
     }
 
     override fun list(): List<Wallet> = repo.getAll()
+
+    override fun addPass(id: WalletId, newPass: Pass): Wallet {
+        val wallet = repo.getWalletById(id)
+        wallet.passes.add(newPass)
+        return repo.update(wallet)
+    }
+
+    override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
 }
