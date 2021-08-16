@@ -1,12 +1,14 @@
 package org.example.demo.domain
 
-class CardWalletLogic(val idFactory: () -> WalletId = { WalletId.random() }): CardWalletPort {
-    private val wallets = mutableMapOf<WalletId, Wallet>()
+class CardWalletLogic(
+    val idFactory: () -> WalletId = { WalletId.random() },
+    private val repo: CardWalletRepositoryPort
+): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet {
         return Wallet(idFactory(), walletHolder)
-            .also { wallets[it.id] = it }
+            .also { repo.save(it) }
     }
 
-    override fun list(): List<Wallet> = wallets.values.toList()
+    override fun list(): List<Wallet> = repo.getAll()
 }
