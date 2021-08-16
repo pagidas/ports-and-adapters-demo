@@ -2,14 +2,14 @@ package org.example.demo
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.demo.domain.*
+import org.example.demo.domain.CardWalletPort
+import org.example.demo.domain.Pass
+import org.example.demo.domain.PassId
 import org.junit.jupiter.api.Test
 
-// TODO: 16/08/2021 This will be a contract test abstract class where test suites need to comply with it.
-class AcceptanceTests {
+abstract class CardWalletContract {
 
-    private val repo: CardWalletRepositoryPort = InMemoryCardWalletRepository()
-    private val cardWallet: CardWalletPort = CardWalletLogic(repo = repo)
+    abstract val cardWallet: CardWalletPort
 
     @Test
     fun `can create a wallet`() {
