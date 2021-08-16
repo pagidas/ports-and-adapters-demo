@@ -1,11 +1,8 @@
-package org.example.demo
+package org.example.demo.domain
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
-import org.example.demo.domain.CardWalletLogic
-import org.example.demo.domain.CardWalletPort
-import org.example.demo.domain.InMemoryCardWalletRepository
 import org.junit.jupiter.api.Test
 
 class CardWalletLogicTest: CardWalletContract() {

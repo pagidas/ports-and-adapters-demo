@@ -1,10 +1,7 @@
-package org.example.demo
+package org.example.demo.domain
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.demo.domain.CardWalletPort
-import org.example.demo.domain.Pass
-import org.example.demo.domain.PassId
 import org.junit.jupiter.api.Test
 
 abstract class CardWalletContract {
