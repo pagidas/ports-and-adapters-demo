@@ -45,8 +45,9 @@ class InMemoryCardWalletRepositoryTest {
         wallet.passes.add(pass)
 
         val updatedWallet = repo.update(wallet)
+        val found = updatedWallet.passes.find { it.id == pass.id }
 
-        assertThat(updatedWallet.passes.last, equalTo(pass))
+        assertThat(found, equalTo(pass))
     }
 
     @Test

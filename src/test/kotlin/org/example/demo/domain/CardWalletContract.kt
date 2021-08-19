@@ -23,8 +23,9 @@ abstract class CardWalletContract {
         val newPass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos")
 
         val updatedWallet = cardWallet.addPass(givenWallet.id, newPass)
+        val foundPass = updatedWallet.passes.find { it.id == newPass.id }
 
-        assertThat(newPass, equalTo(updatedWallet.passes.find { it.id == newPass.id }))
+        assertThat(foundPass, equalTo(newPass))
     }
 }
 
