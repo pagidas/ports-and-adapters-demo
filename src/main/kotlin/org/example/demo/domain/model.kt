@@ -6,7 +6,7 @@ typealias Passes = LinkedList<Pass>
 
 data class Wallet(val id: WalletId, val walletHolder: String, val passes: Passes) {
     companion object {
-        fun empty(id: WalletId, walletHolder: String) = Wallet(WalletId.random(), walletHolder, LinkedList())
+        fun empty(id: WalletId, walletHolder: String) = Wallet(id, walletHolder, LinkedList())
     }
 }
 data class WalletId(val value: UUID) {
