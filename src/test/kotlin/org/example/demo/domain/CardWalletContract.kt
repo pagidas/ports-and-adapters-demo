@@ -20,7 +20,7 @@ abstract class CardWalletContract {
     @Test
     fun `can add a pass to a wallet`() {
         val givenWallet = cardWallet.createWallet("Kostas Akrivos")
-        val newPass = Pass(PassId.random(), "Kostas Akrivos", "Tesco Clubcard")
+        val newPass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos")
 
         val updatedWallet = cardWallet.addPass(givenWallet.id, newPass)
 

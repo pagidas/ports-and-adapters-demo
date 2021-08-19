@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test
 
 class CardWalletLogicTest: CardWalletContract() {
 
-    private val repo = InMemoryCardWalletRepository()
-    override val cardWallet: CardWalletPort = CardWalletLogic(repo = repo)
+    override val cardWallet: CardWalletPort = cardWalletLogicWithInMemoryRepository()
 
     @Test
     fun `can create an empty wallet`() {
