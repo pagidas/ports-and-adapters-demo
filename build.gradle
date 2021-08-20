@@ -29,4 +29,11 @@ compileTestKotlin {
 
 test {
     useJUnitPlatform()
+
+    // logging
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "skipped", "failed", "standard_out", "standard_error"
+        showStandardStreams true
+    }
 }
