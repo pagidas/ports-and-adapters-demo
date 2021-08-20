@@ -1,4 +1,4 @@
-package org.example.demo.domain
+package org.example.demo
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo

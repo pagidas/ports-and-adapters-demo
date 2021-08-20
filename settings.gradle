@@ -1,2 +1,2 @@
 rootProject.name = 'ports-and-adapters-demo'
-
+include ':card-wallet-domain'

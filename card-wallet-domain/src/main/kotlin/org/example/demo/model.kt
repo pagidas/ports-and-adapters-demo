@@ -1,4 +1,4 @@
-package org.example.demo.domain
+package org.example.demo
 
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Result4k
