@@ -1,5 +1,8 @@
 package org.example.demo.domain
 
+import dev.forkhandles.result4k.Result4k
+import dev.forkhandles.result4k.peek
+
 internal class CardWalletLogic(
     private val idFactory: () -> WalletId = { WalletId.random() },
     private val repo: CardWalletRepositoryPort
@@ -18,4 +21,14 @@ internal class CardWalletLogic(
     }
 
     override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
+
+    override fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
+        val wallet = repo.getWalletById(walletId)
+        val foundPass = wallet.passes.first { it.id == passId }
+        return foundPass.credit(amount).peek { updatedPass ->
+            wallet.passes.remove(foundPass)
+            wallet.passes.add(updatedPass)
+            repo.update(wallet)
+        }
+    }
 }

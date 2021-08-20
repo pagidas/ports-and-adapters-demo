@@ -1,5 +1,7 @@
 package org.example.demo.domain
 
+import dev.forkhandles.result4k.Result4k
+
 /**
  * Use this to refer to domain implementation with in-memory database, easy for testing.
  */
@@ -13,6 +15,7 @@ interface CardWalletPort {
     fun list(): List<Wallet>
     fun addPass(id: WalletId, newPass: Pass): Wallet
     fun getWalletById(id: WalletId): Wallet
+    fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints>
 }
 
 /**

@@ -41,7 +41,7 @@ class InMemoryCardWalletRepositoryTest {
     fun `can update a wallet`() {
         val wallet = Wallet.empty(WalletId.random(), "Kostas Akrivos")
             .also { repo.save(it) }
-        val pass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos")
+        val pass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos",)
         wallet.passes.add(pass)
 
         val updatedWallet = repo.update(wallet)
