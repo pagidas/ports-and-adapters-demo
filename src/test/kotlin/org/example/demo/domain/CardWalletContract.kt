@@ -22,7 +22,7 @@ abstract class CardWalletContract {
     @Test
     fun `can add a pass to a wallet`() {
         val wallet = givenNewWallet()
-        val newPass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos")
+        val newPass = aPass()
 
         val updatedWallet = cardWallet.addPass(wallet.id, newPass)
         val foundPass = updatedWallet.passes.find { it.id == newPass.id }
@@ -32,7 +32,7 @@ abstract class CardWalletContract {
 
     @Test
     fun `can credit pass points`() {
-        val pass = Pass(PassId.random(), "Tesco Clubcard", "John Doe", 70)
+        val pass = aPass(points = 70)
         val wallet = givenWalletWithPass(pass)
 
         val result =  cardWallet.creditPass(wallet.id, pass.id, 50)
@@ -42,7 +42,7 @@ abstract class CardWalletContract {
 
     @Test
     fun `can not credit more than balance`() {
-        val pass = Pass(PassId.random(), "Tesco Clubcard", "John Doe", 50)
+        val pass = aPass(points = 50)
         val wallet = givenWalletWithPass(pass)
 
         val result =  cardWallet.creditPass(wallet.id, pass.id, 51)

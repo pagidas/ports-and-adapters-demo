@@ -36,7 +36,7 @@ class CardWalletLogicTest: CardWalletContract() {
     @Test
     fun `can remove old pass from wallet when crediting points`() {
         val wallet = cardWallet.createWallet("Kostas Akrivos")
-        val pass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos", 20)
+        val pass = aPass(points = 20)
         cardWallet.addPass(wallet.id, pass)
 
         cardWallet.creditPass(wallet.id, pass.id, 10)
