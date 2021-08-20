@@ -32,4 +32,17 @@ class CardWalletLogicTest: CardWalletContract() {
             equalTo(Wallet(walletId, "Kostas Akrivos", LinkedList()))
         )
     }
+
+    @Test
+    fun `can remove old pass from wallet when crediting points`() {
+        val wallet = cardWallet.createWallet("Kostas Akrivos")
+        val pass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos", 20)
+        cardWallet.addPass(wallet.id, pass)
+
+        cardWallet.creditPass(wallet.id, pass.id, 10)
+        val updatedWallet = cardWallet.getWalletById(wallet.id)
+
+        assertThat(updatedWallet.passes.size, equalTo(1))
+        assertThat(updatedWallet.passes.first, equalTo(pass.copy(points = 10)))
+    }
 }
