@@ -20,7 +20,8 @@ internal object CardWalletWebController {
         "/wallets" bind routes(
             createWallet(cardWallet),
             getWallets(cardWallet),
-            addPass(cardWallet)
+            addPass(cardWallet),
+            getWalletById(cardWallet)
         )
 
     private fun createWallet(cardWallet: CardWalletPort): RoutingHttpHandler =
@@ -39,5 +40,11 @@ internal object CardWalletWebController {
             val walletId = walletIdLens(request)
             val newPass = passLens(request)
             Response(Status.CREATED).with(walletLens of cardWallet.addPass(walletId, newPass))
+        }
+
+    private fun getWalletById(cardWallet: CardWalletPort): RoutingHttpHandler =
+        "/{id}" bind Method.GET to { request: Request ->
+            val walletId = walletIdLens(request)
+            Response(Status.OK).with(walletLens of cardWallet.getWalletById(walletId))
         }
 }

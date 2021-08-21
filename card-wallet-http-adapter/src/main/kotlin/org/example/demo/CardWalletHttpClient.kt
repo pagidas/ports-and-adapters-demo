@@ -25,7 +25,8 @@ internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPo
     }
 
     override fun getWalletById(id: WalletId): Wallet {
-        TODO("Not yet implemented")
+        val response = http(Request(Method.GET, "wallets/{id}").with(walletIdLens of id))
+        return walletLens(response)
     }
 
     override fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
