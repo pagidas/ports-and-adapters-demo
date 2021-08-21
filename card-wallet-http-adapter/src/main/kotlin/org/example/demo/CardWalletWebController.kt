@@ -11,7 +11,7 @@ import java.util.*
 internal val walletLens = Body.auto<Wallet>().toLens()
 internal val listWalletLens = Body.auto<List<Wallet>>().toLens()
 internal val walletHolderLens = Body.auto<String>().toLens()
-internal val walletIdLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("id")
+internal val walletIdPathLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("id")
 internal val passLens = Body.auto<Pass>().toLens()
 
 internal object CardWalletWebController {
@@ -37,14 +37,14 @@ internal object CardWalletWebController {
 
     private fun addPass(cardWallet: CardWalletPort): RoutingHttpHandler =
         "/{id}/passes" bind Method.POST to { request: Request ->
-            val walletId = walletIdLens(request)
+            val walletId = walletIdPathLens(request)
             val newPass = passLens(request)
             Response(Status.CREATED).with(walletLens of cardWallet.addPass(walletId, newPass))
         }
 
     private fun getWalletById(cardWallet: CardWalletPort): RoutingHttpHandler =
         "/{id}" bind Method.GET to { request: Request ->
-            val walletId = walletIdLens(request)
+            val walletId = walletIdPathLens(request)
             Response(Status.OK).with(walletLens of cardWallet.getWalletById(walletId))
         }
 }

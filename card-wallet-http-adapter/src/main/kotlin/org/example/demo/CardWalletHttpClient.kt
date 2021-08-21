@@ -20,12 +20,12 @@ internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPo
 
     override fun addPass(id: WalletId, newPass: Pass): Wallet {
         val response = http(Request(Method.POST, "/wallets/{id}/passes")
-            .with(walletIdLens of id, passLens of newPass))
+            .with(walletIdPathLens of id, passLens of newPass))
         return walletLens(response)
     }
 
     override fun getWalletById(id: WalletId): Wallet {
-        val response = http(Request(Method.GET, "wallets/{id}").with(walletIdLens of id))
+        val response = http(Request(Method.GET, "/wallets/{id}").with(walletIdPathLens of id))
         return walletLens(response)
     }
 
