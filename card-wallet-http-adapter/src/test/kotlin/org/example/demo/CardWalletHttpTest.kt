@@ -6,6 +6,7 @@ import org.http4k.filter.DebuggingFilters
 import org.junit.jupiter.api.Test
 
 class CardWalletHttpTest: CardWalletContract() {
+
     override val cardWallet: CardWalletPort =
         CardWalletHttpClient(CardWalletWebController(cardWalletLogicWithInMemoryRepository())
             .withFilter(DebuggingFilters.PrintRequestAndResponse())
