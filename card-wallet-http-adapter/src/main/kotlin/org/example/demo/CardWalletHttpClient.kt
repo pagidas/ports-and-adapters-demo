@@ -5,6 +5,10 @@ import dev.forkhandles.result4k.Result4k
 import dev.forkhandles.result4k.Success
 import org.http4k.core.*
 
+/**
+ * This is an internal http implementation of the port
+ * that tests and drives the http adapter of the domain port.
+ */
 internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet {
