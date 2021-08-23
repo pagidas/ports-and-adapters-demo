@@ -1,10 +1,9 @@
 package org.example.demo
 
+import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Result4k
-import org.http4k.core.HttpHandler
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.with
+import dev.forkhandles.result4k.Success
+import org.http4k.core.*
 
 internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
 
@@ -19,17 +18,23 @@ internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPo
     }
 
     override fun addPass(id: WalletId, newPass: Pass): Wallet {
-        val response = http(Request(Method.POST, "/wallets/{id}/passes")
+        val response = http(Request(Method.POST, "/wallets/{walletId}/passes")
             .with(walletIdPathLens of id, passLens of newPass))
         return walletLens(response)
     }
 
     override fun getWalletById(id: WalletId): Wallet {
-        val response = http(Request(Method.GET, "/wallets/{id}").with(walletIdPathLens of id))
+        val response = http(Request(Method.GET, "/wallets/{walletId}").with(walletIdPathLens of id))
         return walletLens(response)
     }
 
     override fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
-        TODO("Not yet implemented")
+        val response = http(Request(Method.POST, "/wallets/{walletId}/passes/{passId}/credit")
+            .with(walletIdPathLens of walletId, passIdPathLens of passId, amountLens of amount))
+        return when (response.status) {
+            Status.OK -> Success(passLens(response))
+            Status.UNPROCESSABLE_ENTITY -> Failure(notEnoughPointsLens(response))
+            else -> throw RuntimeException("Not expected result response: $response")
+        }
     }
 }

@@ -1,5 +1,7 @@
 package org.example.demo
 
+import dev.forkhandles.result4k.map
+import dev.forkhandles.result4k.recover
 import org.http4k.core.*
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Path
@@ -11,8 +13,11 @@ import java.util.*
 internal val walletLens = Body.auto<Wallet>().toLens()
 internal val listWalletLens = Body.auto<List<Wallet>>().toLens()
 internal val walletHolderLens = Body.auto<String>().toLens()
-internal val walletIdPathLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("id")
+internal val walletIdPathLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("walletId")
 internal val passLens = Body.auto<Pass>().toLens()
+internal val passIdPathLens = Path.map({ PassId(UUID.fromString(it)) }, { it.value.toString() }).of("passId")
+internal val amountLens = Body.auto<Int>().toLens()
+internal val notEnoughPointsLens = Body.auto<NotEnoughPoints>().toLens()
 
 internal object CardWalletWebController {
 
@@ -21,7 +26,8 @@ internal object CardWalletWebController {
             createWallet(cardWallet),
             getWallets(cardWallet),
             addPass(cardWallet),
-            getWalletById(cardWallet)
+            getWalletById(cardWallet),
+            creditPass(cardWallet)
         )
 
     private fun createWallet(cardWallet: CardWalletPort): RoutingHttpHandler =
@@ -36,15 +42,27 @@ internal object CardWalletWebController {
         }
 
     private fun addPass(cardWallet: CardWalletPort): RoutingHttpHandler =
-        "/{id}/passes" bind Method.POST to { request: Request ->
+        "/{walletId}/passes" bind Method.POST to { request: Request ->
             val walletId = walletIdPathLens(request)
             val newPass = passLens(request)
             Response(Status.CREATED).with(walletLens of cardWallet.addPass(walletId, newPass))
         }
 
     private fun getWalletById(cardWallet: CardWalletPort): RoutingHttpHandler =
-        "/{id}" bind Method.GET to { request: Request ->
+        "/{walletId}" bind Method.GET to { request: Request ->
             val walletId = walletIdPathLens(request)
             Response(Status.OK).with(walletLens of cardWallet.getWalletById(walletId))
+        }
+
+    private fun creditPass(cardWallet: CardWalletPort): RoutingHttpHandler =
+        "/{walletId}/passes/{passId}/credit" bind Method.POST to { request: Request ->
+            val walletId = walletIdPathLens(request)
+            val passId = passIdPathLens(request)
+            val amount = amountLens(request)
+            cardWallet.creditPass(walletId, passId, amount)
+                .map { updatedPass: Pass ->
+                    Response(Status.OK).with(passLens of updatedPass) }
+                .recover { failure: NotEnoughPoints ->
+                    Response(Status.UNPROCESSABLE_ENTITY).with(notEnoughPointsLens of failure) }
         }
 }
