@@ -3,12 +3,14 @@ package org.example.demo
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.http4k.filter.DebuggingFilters
+import org.http4k.filter.ServerFilters
 import org.junit.jupiter.api.Test
 
 class CardWalletHttpTest: CardWalletContract() {
 
     override val cardWallet: CardWalletPort =
         CardWalletHttpClient(CardWalletWebController(cardWalletLogicWithInMemoryRepository())
+            .withFilter(ServerFilters.CatchLensFailure())
             .withFilter(DebuggingFilters.PrintRequestAndResponse())
         )
 
