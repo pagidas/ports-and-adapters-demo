@@ -31,21 +31,21 @@ abstract class CardWalletContract {
     }
 
     @Test
-    fun `can credit pass points`() {
+    fun `can debit pass points`() {
         val pass = aPass(points = 70)
         val wallet = givenWalletWithPass(pass)
 
-        val result =  cardWallet.creditPass(wallet.id, pass.id, 50)
+        val result =  cardWallet.debitPass(wallet.id, pass.id, 50)
 
         assertThat(result.valueOrNull()?.points, equalTo(20))
     }
 
     @Test
-    fun `can not credit more than balance`() {
+    fun `can not debit more than balance`() {
         val pass = aPass(points = 50)
         val wallet = givenWalletWithPass(pass)
 
-        val result =  cardWallet.creditPass(wallet.id, pass.id, 51)
+        val result =  cardWallet.debitPass(wallet.id, pass.id, 51)
 
         assertThat(result.failureOrNull(), equalTo(NotEnoughPoints(pass.id, 51, 50)))
     }

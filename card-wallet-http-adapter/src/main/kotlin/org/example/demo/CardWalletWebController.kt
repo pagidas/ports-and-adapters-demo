@@ -27,7 +27,7 @@ internal object CardWalletWebController {
             getWallets(cardWallet),
             addPass(cardWallet),
             getWalletById(cardWallet),
-            creditPass(cardWallet)
+            debitPass(cardWallet)
         )
 
     private fun createWallet(cardWallet: CardWalletPort): RoutingHttpHandler =
@@ -54,12 +54,12 @@ internal object CardWalletWebController {
             Response(Status.OK).with(walletLens of cardWallet.getWalletById(walletId))
         }
 
-    private fun creditPass(cardWallet: CardWalletPort): RoutingHttpHandler =
-        "/{walletId}/passes/{passId}/credit" bind Method.POST to { request: Request ->
+    private fun debitPass(cardWallet: CardWalletPort): RoutingHttpHandler =
+        "/{walletId}/passes/{passId}/debit" bind Method.POST to { request: Request ->
             val walletId = walletIdPathLens(request)
             val passId = passIdPathLens(request)
             val amount = amountLens(request)
-            cardWallet.creditPass(walletId, passId, amount)
+            cardWallet.debitPass(walletId, passId, amount)
                 .map { updatedPass: Pass ->
                     Response(Status.OK).with(passLens of updatedPass) }
                 .recover { failure: NotEnoughPoints ->

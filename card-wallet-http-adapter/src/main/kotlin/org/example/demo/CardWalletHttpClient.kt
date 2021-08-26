@@ -32,8 +32,8 @@ internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPo
         return walletLens(response)
     }
 
-    override fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
-        val response = http(Request(Method.POST, "/wallets/{walletId}/passes/{passId}/credit")
+    override fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
+        val response = http(Request(Method.POST, "/wallets/{walletId}/passes/{passId}/debit")
             .with(walletIdPathLens of walletId, passIdPathLens of passId, amountLens of amount))
         return when (response.status) {
             Status.OK -> Success(passLens(response))

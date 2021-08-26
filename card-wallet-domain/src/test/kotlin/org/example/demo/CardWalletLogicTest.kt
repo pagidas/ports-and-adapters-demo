@@ -34,12 +34,12 @@ class CardWalletLogicTest: CardWalletContract() {
     }
 
     @Test
-    fun `can remove old pass from wallet when crediting points`() {
+    fun `can remove old pass from wallet when debiting points`() {
         val wallet = cardWallet.createWallet("Kostas Akrivos")
         val pass = aPass(points = 20)
         cardWallet.addPass(wallet.id, pass)
 
-        cardWallet.creditPass(wallet.id, pass.id, 10)
+        cardWallet.debitPass(wallet.id, pass.id, 10)
         val updatedWallet = cardWallet.getWalletById(wallet.id)
 
         assertThat(updatedWallet.passes.size, equalTo(1))

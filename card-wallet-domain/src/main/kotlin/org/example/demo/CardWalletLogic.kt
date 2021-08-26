@@ -22,10 +22,10 @@ internal class CardWalletLogic(
 
     override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
 
-    override fun creditPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
+    override fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
         val wallet = repo.getWalletById(walletId)
         val foundPass = wallet.passes.first { it.id == passId }
-        return foundPass.credit(amount).peek { updatedPass ->
+        return foundPass.debit(amount).peek { updatedPass ->
             wallet.passes.remove(foundPass)
             wallet.passes.add(updatedPass)
             repo.update(wallet)

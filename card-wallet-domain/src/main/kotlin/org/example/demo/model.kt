@@ -18,7 +18,7 @@ data class WalletId(val value: UUID) {
     }
 }
 data class Pass(val id: PassId, val passName: String, val passHolder: String, val points: Int = 0) {
-    fun credit(amount: Int): Result4k<Pass, NotEnoughPoints> =
+    fun debit(amount: Int): Result4k<Pass, NotEnoughPoints> =
         if (amount <= points) Success(copy(points = points - amount))
         else Failure(NotEnoughPoints(id, amount, points))
 }
@@ -27,4 +27,4 @@ data class PassId(val value: UUID) {
         fun random() = PassId(UUID.randomUUID())
     }
 }
-data class NotEnoughPoints(val passId: PassId, val creditAmount: Int, val balance: Int)
+data class NotEnoughPoints(val passId: PassId, val debitAmount: Int, val balance: Int)
