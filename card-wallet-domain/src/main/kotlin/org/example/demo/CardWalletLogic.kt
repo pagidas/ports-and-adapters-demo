@@ -3,7 +3,7 @@ package org.example.demo
 import dev.forkhandles.result4k.Result4k
 import dev.forkhandles.result4k.peek
 
-internal class CardWalletLogic(
+class CardWalletLogic(
     private val idFactory: () -> WalletId = { WalletId.random() },
     private val repo: CardWalletRepositoryPort
 ): CardWalletPort {
