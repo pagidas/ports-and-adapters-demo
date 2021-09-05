@@ -8,7 +8,7 @@ internal class InMemoryCardWalletRepository: CardWalletRepositoryPort {
         wallets.put(wallet.id, wallet).let { saved ->
             if (saved != null) {
                 wallets.remove(wallet.id)
-                throw NoSuchElementException("Wallet record with key: ${wallet.id.value} already exists.")
+                throw IllegalStateException("Wallet record with key: ${wallet.id.value} already exists.")
             }
             wallet
         }

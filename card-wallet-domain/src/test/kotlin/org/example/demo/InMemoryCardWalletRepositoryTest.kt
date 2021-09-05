@@ -24,7 +24,7 @@ class InMemoryCardWalletRepositoryTest {
         val wallet = Wallet.empty(WalletId.random(), "John Doe")
             .also { repo.save(it)}
 
-        assertThrows<NoSuchElementException> {
+        assertThrows<IllegalStateException> {
             repo.save(wallet)
         }
     }
