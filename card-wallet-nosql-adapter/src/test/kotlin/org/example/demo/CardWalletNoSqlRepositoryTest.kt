@@ -5,10 +5,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class CardWalletNoSqlRepositoryTest: CardWalletContract() {
+class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
-    private val cardWalletRepo: CardWalletNoSqlRepository = CardWalletNoSqlRepository()
-    override val cardWallet: CardWalletPort = CardWalletLogic(repo = cardWalletRepo)
+    override val cardWalletRepo: CardWalletNoSqlRepository = CardWalletNoSqlRepository()
 
     companion object {
         @BeforeAll
