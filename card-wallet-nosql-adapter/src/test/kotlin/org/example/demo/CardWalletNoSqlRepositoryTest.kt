@@ -4,6 +4,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.litote.kmongo.EMPTY_BSON
+import org.litote.kmongo.KMongo
+import org.litote.kmongo.getCollection
 
 class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
@@ -20,7 +23,7 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
     @AfterEach
     fun clean() {
-        cardWalletRepo.deleteAll()
+        getWalletsCol().deleteMany(EMPTY_BSON)
     }
 
     @Test
@@ -29,5 +32,9 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
             cardWalletRepo.getWalletById(WalletId.random())
         }
     }
+}
+
+internal fun getWalletsCol() = KMongo.createClient(TestContainersBase.mongoDbContainerUrl).run {
+    getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
 }
 
