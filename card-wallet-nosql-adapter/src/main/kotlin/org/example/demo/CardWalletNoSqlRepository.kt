@@ -4,17 +4,15 @@ import com.mongodb.client.MongoCollection
 import org.litote.kmongo.*
 
 class CardWalletNoSqlRepository: CardWalletRepositoryPort {
-    companion object {
-        const val CARD_WALLET_DB_NAME = "card_wallet"
-        const val WALLETS_COLUMN_NAME = "wallets"
+    private companion object {
         val mongoDbUrl: String by lazy { System.getProperty("MONGO_DB_URL") }
     }
 
     private val walletsCol: MongoCollection<Wallet>
 
     init {
-        KMongo.createClient(mongoDbUrl).run {
-            walletsCol = getDatabase(CARD_WALLET_DB_NAME).getCollection<Wallet>(WALLETS_COLUMN_NAME)
+        walletsCol = KMongo.createClient(mongoDbUrl).run {
+            getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
         }
     }
 
@@ -34,9 +32,10 @@ class CardWalletNoSqlRepository: CardWalletRepositoryPort {
         return wallet
     }
 
-    /**
-     * Used only for testing to clear the state in mongodb container.
-     */
-    fun deleteAll() { walletsCol.deleteMany(EMPTY_BSON) }
+}
+
+object MongoDbConfig {
+    const val CARD_WALLET_DB_NAME = "card_wallet"
+    const val WALLETS_COLLECTION_NAME = "wallets"
 }
 
