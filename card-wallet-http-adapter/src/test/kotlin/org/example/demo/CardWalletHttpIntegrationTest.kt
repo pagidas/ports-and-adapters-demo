@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 
 class CardWalletHttpIntegrationTest: CardWalletContract() {
 
-    private val httpServer: Http4kServer = CardWalletWebController(cardWalletLogicWithInMemoryRepository())
+    private val httpServer: Http4kServer = CardWalletWebController(inMemoryCardWallet())
         .withFilter(ServerFilters.CatchLensFailure())
         .asServer(SunHttp())
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class CardWalletHttpTest: CardWalletContract() {
 
     override val cardWallet: CardWalletPort =
-        CardWalletHttpClient(CardWalletWebController(cardWalletLogicWithInMemoryRepository())
+        CardWalletHttpClient(CardWalletWebController(inMemoryCardWallet())
             .withFilter(ServerFilters.CatchLensFailure())
             .withFilter(DebuggingFilters.PrintRequestAndResponse())
         )
