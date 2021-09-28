@@ -3,11 +3,6 @@ package org.example.demo
 import dev.forkhandles.result4k.Result4k
 
 /**
- * Use this to refer to domain implementation with in-memory database, easy for testing.
- */
-fun cardWalletLogicWithInMemoryRepository(): CardWalletPort = CardWalletLogic(repo = InMemoryCardWalletRepository())
-
-/**
  * Primary/driving/input port that shapes how to communicate with the domain.
  */
 interface CardWalletPort {

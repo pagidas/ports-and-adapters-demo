@@ -1,5 +1,10 @@
 package org.example.demo
 
+/**
+ * Use this to refer to domain implementation with in-memory database, easy for testing.
+ */
+fun cardWalletLogicWithInMemoryRepository(): CardWalletPort = CardWalletLogic(repo = InMemoryCardWalletRepository())
+
 private val passNames = listOf(
     "Tesco - ClubCard",
     "Sainsbury - Nectar",
