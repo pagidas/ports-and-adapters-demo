@@ -1,2 +1,2 @@
 rootProject.name = 'ports-and-adapters-demo'
-include 'card-wallet-domain', 'card-wallet-http-adapter', 'card-wallet-nosql-adapter'
+include 'card-wallet-domain', 'card-wallet-http-adapter', 'card-wallet-nosql-adapter', 'card-wallet-application'
