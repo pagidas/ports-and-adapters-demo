@@ -10,14 +10,16 @@ import org.litote.kmongo.getCollection
 
 class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
-    override val cardWalletRepo: CardWalletNoSqlRepository = CardWalletNoSqlRepository()
+    override val cardWalletRepo: CardWalletNoSqlRepository = CardWalletNoSqlRepository(mongoDbConfig)
 
     companion object {
+        lateinit var mongoDbConfig: MongoDbConfig
+
         @BeforeAll
         @JvmStatic
         fun setup() {
             TestContainersBase()
-            System.setProperty("MONGO_DB_URL", TestContainersBase.mongoDbContainerUrl)
+            mongoDbConfig = MongoDbConfig(port = TestContainersBase.mongoDbContainerPort)
         }
     }
 

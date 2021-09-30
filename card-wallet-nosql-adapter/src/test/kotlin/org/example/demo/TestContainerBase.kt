@@ -16,4 +16,5 @@ object TestContainersBase {
     }
 
     val mongoDbContainerUrl: String by lazy { "mongodb://localhost:${mongoDbContainer.getMappedPort(MONGODB_PORT)}" }
+    val mongoDbContainerPort: Int by lazy { mongoDbContainer.getMappedPort(MONGODB_PORT) }
 }

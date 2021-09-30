@@ -3,15 +3,12 @@ package org.example.demo
 import com.mongodb.client.MongoCollection
 import org.litote.kmongo.*
 
-class CardWalletNoSqlRepository: CardWalletRepositoryPort {
-    private companion object {
-        val mongoDbUrl: String by lazy { System.getProperty("MONGO_DB_URL") }
-    }
+class CardWalletNoSqlRepository(private val mongoDbConfig: MongoDbConfig): CardWalletRepositoryPort {
 
     private val walletsCol: MongoCollection<Wallet>
 
     init {
-        walletsCol = KMongo.createClient(mongoDbUrl).run {
+        walletsCol = KMongo.createClient(mongoDbConfig.url()).run {
             getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
         }
     }
@@ -34,8 +31,14 @@ class CardWalletNoSqlRepository: CardWalletRepositoryPort {
 
 }
 
-object MongoDbConfig {
-    const val CARD_WALLET_DB_NAME = "card_wallet"
-    const val WALLETS_COLLECTION_NAME = "wallets"
+data class MongoDbConfig(private val host: String = "localhost", private val port: Int) {
+    companion object {
+        private const val PROTOCOL = "mongodb"
+
+        const val CARD_WALLET_DB_NAME = "card_wallet"
+        const val WALLETS_COLLECTION_NAME = "wallets"
+    }
+
+    fun url(): String = "$PROTOCOL://$host:$port"
 }
 
