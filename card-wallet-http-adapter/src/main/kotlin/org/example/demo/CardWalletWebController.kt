@@ -18,17 +18,25 @@ internal val passLens = Body.auto<Pass>().toLens()
 internal val passIdPathLens = Path.map({ PassId(UUID.fromString(it)) }, { it.value.toString() }).of("passId")
 internal val amountLens = Body.auto<Int>().toLens()
 internal val notEnoughPointsLens = Body.auto<NotEnoughPoints>().toLens()
+internal val healthCheckLens = Body.auto<Map<String, String>>().toLens()
 
 internal object CardWalletWebController {
 
-    operator fun invoke(cardWallet: CardWalletPort): RoutingHttpHandler =
-        "/wallets" bind routes(
+    operator fun invoke(cardWallet: CardWalletPort): RoutingHttpHandler {
+        val healthRoute = "/health" bind { _:Request ->
+            Response(Status.OK).with(healthCheckLens of mapOf("status" to "UP"))
+        }
+
+        val cardWalletRoutes = "/wallets" bind routes(
             createWallet(cardWallet),
             getWallets(cardWallet),
             addPass(cardWallet),
             getWalletById(cardWallet),
             debitPass(cardWallet)
         )
+
+        return routes(healthRoute, cardWalletRoutes)
+    }
 
     private fun createWallet(cardWallet: CardWalletPort): RoutingHttpHandler =
         "/" bind Method.POST to { request: Request ->
