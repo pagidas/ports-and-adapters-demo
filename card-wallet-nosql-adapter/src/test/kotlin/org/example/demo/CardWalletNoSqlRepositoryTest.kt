@@ -1,7 +1,7 @@
 package org.example.demo
 
+import com.mongodb.client.MongoCollection
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.EMPTY_BSON
@@ -10,18 +10,10 @@ import org.litote.kmongo.getCollection
 
 class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
-    override val cardWalletRepo: CardWalletNoSqlRepository = CardWalletNoSqlRepository(mongoDbConfig)
+    private val mongoDb: MongoDbDockerContainer = MongoDbDockerContainer
 
-    companion object {
-        lateinit var mongoDbConfig: MongoDbConfig
-
-        @BeforeAll
-        @JvmStatic
-        fun setup() {
-            TestContainersBase()
-            mongoDbConfig = MongoDbConfig(port = TestContainersBase.mongoDbContainerPort)
-        }
-    }
+    override val cardWalletRepo: CardWalletNoSqlRepository =
+        CardWalletNoSqlRepository(MongoDbConfig(port = mongoDb.port))
 
     @AfterEach
     fun clean() {
@@ -34,9 +26,9 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
             cardWalletRepo.getWalletById(WalletId.random())
         }
     }
-}
 
-internal fun getWalletsCol() = KMongo.createClient(TestContainersBase.mongoDbContainerUrl).run {
-    getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
+    private fun getWalletsCol(): MongoCollection<Wallet> = KMongo.createClient(mongoDb.url).run {
+        getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
+    }
 }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.assertThrows
 
 class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
-    override val cardWalletRepo: CardWalletRepositoryPort = InMemoryCardWalletRepository()
+    override val cardWalletRepo: CardWalletRepositoryPort = FakeCardWalletRepository()
 
     @Test
     fun `cannot save wallet that already exists`() {

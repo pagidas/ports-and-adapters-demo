@@ -13,7 +13,7 @@ class CardWalletLogicTest: CardWalletContract() {
 
     init {
         walletId = WalletId(UUID.fromString("ded99ee0-d211-4d9e-a5c1-d69a98fc2040"))
-        cardWallet = CardWalletLogic({ walletId }, InMemoryCardWalletRepository())
+        cardWallet = CardWalletLogic({ walletId }, FakeCardWalletRepository())
     }
 
     @Test

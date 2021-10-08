@@ -1,6 +1,6 @@
 package org.example.demo
 
-class InMemoryCardWalletRepository: CardWalletRepositoryPort {
+class FakeCardWalletRepository: CardWalletRepositoryPort {
 
     private val wallets = mutableMapOf<WalletId, Wallet>()
 

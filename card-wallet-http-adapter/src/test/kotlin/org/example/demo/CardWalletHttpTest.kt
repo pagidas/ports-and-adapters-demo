@@ -1,25 +1,33 @@
 package org.example.demo
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.http4k.filter.DebuggingFilters
+import org.http4k.client.JavaHttpClient
+import org.http4k.core.Uri
+import org.http4k.core.then
+import org.http4k.filter.ClientFilters
 import org.http4k.filter.ServerFilters
-import org.junit.jupiter.api.Test
+import org.http4k.server.Http4kServer
+import org.http4k.server.SunHttp
+import org.http4k.server.asServer
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
 class CardWalletHttpTest: CardWalletContract() {
 
-    override val cardWallet: CardWalletPort =
-        CardWalletHttpClient(CardWalletWebController(inMemoryCardWallet())
-            .withFilter(ServerFilters.CatchLensFailure())
-            .withFilter(DebuggingFilters.PrintRequestAndResponse())
-        )
+    private val httpServer: Http4kServer = CardWalletWebController(InMemoryCardWallet())
+        .withFilter(ServerFilters.CatchLensFailure())
+        .asServer(SunHttp())
 
-    @Test
-    fun `can handle http to get a wallet by id`() {
-        val wallet = cardWallet.createWallet("John Doe")
+    override val cardWallet: CardWalletPort = CardWalletHttpClient(
+        ClientFilters.SetBaseUriFrom(Uri.of("http://localhost:${httpServer.port()}"))
+            .then(JavaHttpClient()))
 
-        val foundWallet = cardWallet.getWalletById(wallet.id)
+    @BeforeEach
+    fun setUp() {
+        httpServer.start()
+    }
 
-        assertThat(foundWallet, equalTo(wallet))
+    @AfterEach
+    fun tearDown() {
+        httpServer.stop()
     }
 }

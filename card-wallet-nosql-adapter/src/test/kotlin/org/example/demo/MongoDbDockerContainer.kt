@@ -3,7 +3,7 @@ package org.example.demo
 import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.utility.DockerImageName
 
-object TestContainersBase {
+object MongoDbDockerContainer {
 
     private const val MONGODB_PORT = 27017
 
@@ -11,10 +11,10 @@ object TestContainersBase {
         withExposedPorts(MONGODB_PORT)
     }
 
-    operator fun invoke() {
+    init {
         mongoDbContainer.start()
     }
 
-    val mongoDbContainerUrl: String by lazy { "mongodb://localhost:${mongoDbContainer.getMappedPort(MONGODB_PORT)}" }
-    val mongoDbContainerPort: Int by lazy { mongoDbContainer.getMappedPort(MONGODB_PORT) }
+    val url: String by lazy { "mongodb://localhost:${mongoDbContainer.getMappedPort(MONGODB_PORT)}" }
+    val port: Int by lazy { mongoDbContainer.getMappedPort(MONGODB_PORT) }
 }
