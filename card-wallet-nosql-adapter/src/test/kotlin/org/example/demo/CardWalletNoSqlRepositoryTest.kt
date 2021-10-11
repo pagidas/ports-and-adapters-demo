@@ -1,5 +1,6 @@
 package org.example.demo
 
+import MongoDbDockerContainer
 import com.mongodb.client.MongoCollection
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test

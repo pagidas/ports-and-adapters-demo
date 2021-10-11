@@ -1,0 +1,4 @@
+dependencies {
+    implementation platform("org.testcontainers:testcontainers-bom:1.16.0")
+    implementation "org.testcontainers:mongodb"
+}

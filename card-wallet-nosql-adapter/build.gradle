@@ -3,8 +3,7 @@ dependencies {
     implementation 'org.litote.kmongo:kmongo:4.2.8'
 
     testImplementation testFixtures(project(':card-wallet-domain'))
-    implementation platform("org.testcontainers:testcontainers-bom:1.16.0")
-    testImplementation "org.testcontainers:mongodb"
+    testImplementation project(':testcontainers-common')
     testImplementation 'org.slf4j:slf4j-api:2.0.0-alpha5'
     testImplementation 'ch.qos.logback:logback-core:1.3.0-alpha10'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.3.0-alpha10'

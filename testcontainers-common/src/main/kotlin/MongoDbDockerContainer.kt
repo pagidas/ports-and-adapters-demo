@@ -1,5 +1,3 @@
-package org.example.demo
-
 import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.utility.DockerImageName
 
