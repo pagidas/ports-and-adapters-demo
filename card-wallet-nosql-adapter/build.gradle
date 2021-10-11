@@ -1,6 +1,6 @@
 dependencies {
     implementation project(':card-wallet-domain')
-    implementation 'org.litote.kmongo:kmongo:4.2.8'
+    api 'org.litote.kmongo:kmongo:4.2.8'
 
     testImplementation testFixtures(project(':card-wallet-domain'))
     testImplementation project(':testcontainers-common')

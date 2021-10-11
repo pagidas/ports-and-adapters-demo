@@ -25,4 +25,6 @@ class CardWalletApplication: KoinComponent {
     operator fun invoke() {
         httpServer.start()
     }
+
+    fun getHttpPort(): Int = httpServer.port()
 }
