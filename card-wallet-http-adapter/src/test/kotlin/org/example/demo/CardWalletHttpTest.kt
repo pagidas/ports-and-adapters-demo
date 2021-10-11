@@ -1,9 +1,5 @@
 package org.example.demo
 
-import org.http4k.client.JavaHttpClient
-import org.http4k.core.Uri
-import org.http4k.core.then
-import org.http4k.filter.ClientFilters
 import org.http4k.filter.ServerFilters
 import org.http4k.server.Http4kServer
 import org.http4k.server.SunHttp
@@ -17,9 +13,8 @@ class CardWalletHttpTest: CardWalletContract() {
         .withFilter(ServerFilters.CatchLensFailure())
         .asServer(SunHttp())
 
-    override val cardWallet: CardWalletPort = CardWalletHttpClient(
-        ClientFilters.SetBaseUriFrom(Uri.of("http://localhost:${httpServer.port()}"))
-            .then(JavaHttpClient()))
+    override val cardWallet: CardWalletPort =
+        CardWalletHttpClientFactory.ofUri("http://localhost:${httpServer.port()}")
 
     @BeforeEach
     fun setUp() {

@@ -10,15 +10,15 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import java.util.*
 
-internal val walletLens = Body.auto<Wallet>().toLens()
-internal val listWalletLens = Body.auto<List<Wallet>>().toLens()
-internal val walletHolderLens = Body.auto<String>().toLens()
-internal val walletIdPathLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("walletId")
-internal val passLens = Body.auto<Pass>().toLens()
-internal val passIdPathLens = Path.map({ PassId(UUID.fromString(it)) }, { it.value.toString() }).of("passId")
-internal val amountLens = Body.auto<Int>().toLens()
-internal val notEnoughPointsLens = Body.auto<NotEnoughPoints>().toLens()
-internal val healthCheckLens = Body.auto<Map<String, String>>().toLens()
+val walletLens = Body.auto<Wallet>().toLens()
+val listWalletLens = Body.auto<List<Wallet>>().toLens()
+val walletHolderLens = Body.auto<String>().toLens()
+val walletIdPathLens = Path.map({ WalletId(UUID.fromString(it)) }, { it.value.toString() }).of("walletId")
+val passLens = Body.auto<Pass>().toLens()
+val passIdPathLens = Path.map({ PassId(UUID.fromString(it)) }, { it.value.toString() }).of("passId")
+val amountLens = Body.auto<Int>().toLens()
+val notEnoughPointsLens = Body.auto<NotEnoughPoints>().toLens()
+val healthCheckLens = Body.auto<Map<String, String>>().toLens()
 
 internal object CardWalletWebController {
 

@@ -8,8 +8,11 @@ import org.http4k.core.*
 /**
  * This is an internal http implementation of the port
  * that tests and drives the http adapter of the domain port.
+ *
+ * Use [CardWalletHttpClientFactory] to target the api when running
+ * on a host and port.
  */
-internal class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
+class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet {
         val response = http(Request(Method.POST, "/wallets").with(walletHolderLens of walletHolder))
