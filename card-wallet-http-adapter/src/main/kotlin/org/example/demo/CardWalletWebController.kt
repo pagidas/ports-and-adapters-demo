@@ -1,14 +1,30 @@
 package org.example.demo
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.forkhandles.result4k.map
 import dev.forkhandles.result4k.recover
+import org.example.demo.CardWalletJackson.auto
 import org.http4k.core.*
-import org.http4k.format.Jackson.auto
+import org.http4k.format.ConfigurableJackson
+import org.http4k.format.asConfigurable
+import org.http4k.format.uuid
+import org.http4k.format.withStandardMappings
 import org.http4k.lens.Path
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import java.util.*
+
+private object CardWalletJackson: ConfigurableJackson(KotlinModule()
+    .asConfigurable()
+    .withStandardMappings()
+    .uuid(::WalletId, WalletId::value)
+    .uuid(::PassId, PassId::value)
+    .done()
+    .deactivateDefaultTyping()
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+)
 
 val walletLens = Body.auto<Wallet>().toLens()
 val listWalletLens = Body.auto<List<Wallet>>().toLens()
