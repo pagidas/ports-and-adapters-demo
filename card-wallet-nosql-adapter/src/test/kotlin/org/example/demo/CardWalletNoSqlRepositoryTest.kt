@@ -4,11 +4,13 @@ import MongoDbDockerContainer
 import com.mongodb.client.MongoCollection
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.EMPTY_BSON
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.getCollection
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
     private val mongoDb: MongoDbDockerContainer = MongoDbDockerContainer
