@@ -8,9 +8,9 @@ a small application using
 
 This architecture improves modular code, and prioritises on defining
 the protocol of your application (an API) and implementing 
-its behaviour abstract from any technology, so business logic does not
-leak out in other layers. It also helps on testing as the very 
-architecture, due to its glossary, 
+its behaviour abstract from any technology. Therefore, our business 
+logic is well encapsulated, and is not coupled to implementation details. 
+It also helps on testing as the very architecture, due to its glossary, 
 enforces the (_SOLI**D**_) **_Dependency Inversion_** principle.
 
 ## Theme of application
@@ -45,7 +45,7 @@ driven by our domain application, we have two adapters (there may be more):
 - **_driving_** or **_primary_** adapter.
   - exposes card-wallet's capabilities in HTTP.
 - **_driven_** or **_secondary_** adapter.
-  - domain is stored and queries in a NoSQL MongoDb fashion.
+  - domain is stored and queried in a NoSQL MongoDb fashion.
 
 The "inside" world is abstract from any technology, and the "outside" world only maps
 technology in terms of business implemented "inside". This isolation is the benefit of this architecture.
@@ -63,7 +63,9 @@ just its type. Also, we do not know what exactly is the output and its variants;
 
 What is lacking upfront for a client (an adapter) implementing/using a port is really a set
 of rules explaining how it works. And we have attempted to do this by writing down
-a single test suite. Interface + Test Suite = Contract.
+a single test suite. 
+
+`Interface + Test Suite = Contract`.
 
 By having this contract test in place, plus the isolation and boundaries of the ports and adapters
 pattern, we can easily use that same contract against any layer (adapter) of the system,
