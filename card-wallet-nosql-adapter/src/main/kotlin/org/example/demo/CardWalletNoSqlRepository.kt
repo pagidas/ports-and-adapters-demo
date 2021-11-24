@@ -1,17 +1,19 @@
 package org.example.demo
 
+import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
-import org.litote.kmongo.*
+import org.litote.kmongo.eq
+import org.litote.kmongo.getCollection
+import org.litote.kmongo.updateOne
 
-class CardWalletNoSqlRepository(private val mongoDbConfig: MongoDbConfig): CardWalletRepositoryPort {
+fun createCardWalletNoSqlRepository(mongoConfig: MongoDbProperties): CardWalletRepositoryPort {
+    return CardWalletNoSqlRepository(createMongoDbClient(mongoConfig))
+}
 
-    private val walletsCol: MongoCollection<Wallet>
+class CardWalletNoSqlRepository(mongoClient: MongoClient): CardWalletRepositoryPort {
 
-    init {
-        walletsCol = KMongo.createClient(mongoDbConfig.url()).run {
-            getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
-        }
-    }
+    private val walletsCol: MongoCollection<Wallet> =
+        mongoClient.getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
 
     override fun save(wallet: Wallet): Wallet {
         walletsCol.insertOne(wallet)
@@ -30,15 +32,3 @@ class CardWalletNoSqlRepository(private val mongoDbConfig: MongoDbConfig): CardW
     }
 
 }
-
-data class MongoDbConfig(private val host: String = "localhost", private val port: Int) {
-    companion object {
-        private const val PROTOCOL = "mongodb"
-
-        const val CARD_WALLET_DB_NAME = "card_wallet"
-        const val WALLETS_COLLECTION_NAME = "wallets"
-    }
-
-    fun url(): String = "$PROTOCOL://$host:$port"
-}
-

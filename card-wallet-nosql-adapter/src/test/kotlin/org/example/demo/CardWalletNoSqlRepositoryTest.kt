@@ -15,8 +15,11 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
 
     private val mongoDb: MongoDbDockerContainer = MongoDbDockerContainer
 
-    override val cardWalletRepo: CardWalletNoSqlRepository =
-        CardWalletNoSqlRepository(MongoDbConfig(port = mongoDb.port))
+    private val mongoConfig: MongoDbProperties = object: MongoDbProperties {
+        override fun getUrl(): String = "mongodb://localhost:${mongoDb.port}"
+    }
+
+    override val cardWalletRepo: CardWalletRepositoryPort = createCardWalletNoSqlRepository(mongoConfig)
 
     @AfterEach
     fun clean() {

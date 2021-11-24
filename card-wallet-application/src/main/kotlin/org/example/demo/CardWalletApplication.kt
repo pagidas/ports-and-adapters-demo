@@ -9,8 +9,8 @@ import org.koin.dsl.module
  * Definition of the module using dependency injection.
  */
 val module = module {
-    single { MongoDbConfig(port = getProperty("mongo_db_port").toInt()) }
-    single<CardWalletRepositoryPort> { CardWalletNoSqlRepository(get()) }
+    single<MongoDbProperties> { MongoDbConfig(port = getProperty("mongo_db_port").toInt()) }
+    single { createCardWalletNoSqlRepository(get()) }
     single<CardWalletPort> { CardWalletLogic(repo = get()) }
     single { CardWalletHttpFactory.getService(get()) }
 }
