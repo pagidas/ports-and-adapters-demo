@@ -3,7 +3,7 @@ package org.example.demo
 import com.mongodb.client.MongoClient
 import org.litote.kmongo.KMongo
 
-fun createMongoDbClient(mongoConfig: MongoDbProperties): MongoClient = KMongo.createClient(mongoConfig.getUrl())
+internal fun createMongoDbClient(mongoConfig: MongoDbProperties): MongoClient = KMongo.createClient(mongoConfig.getUrl())
 
 interface MongoDbProperties {
     fun getUrl(): String
