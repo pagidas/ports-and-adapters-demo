@@ -7,7 +7,7 @@ import org.http4k.server.asServer
 
 class CardWalletHttpServer(cardWalletPort: CardWalletPort) {
 
-    private val httpServer: Http4kServer = CardWalletHttpFactory.getService(cardWalletPort)
+    private val httpServer: Http4kServer = createHttpCardWallet(cardWalletPort)
 
     fun start() {
         httpServer.start()
@@ -23,11 +23,7 @@ class CardWalletHttpServer(cardWalletPort: CardWalletPort) {
  * collecting the api endpoints, adding filters, and choosing
  * the http server at which the service will be running to.
  */
-class CardWalletHttpFactory {
-    companion object {
-        fun getService(cardWalletPort: CardWalletPort): Http4kServer =
-            CardWalletWebController(cardWalletPort)
-                .withFilter(ServerFilters.CatchLensFailure())
-                .asServer(SunHttp())
-    }
-}
+private fun createHttpCardWallet(cardWalletPort: CardWalletPort): Http4kServer =
+    CardWalletWebController(cardWalletPort)
+        .withFilter(ServerFilters.CatchLensFailure())
+        .asServer(SunHttp())
