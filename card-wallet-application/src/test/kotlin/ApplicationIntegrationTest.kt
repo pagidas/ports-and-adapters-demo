@@ -1,6 +1,5 @@
 import com.mongodb.client.MongoCollection
 import org.example.demo.*
-import org.http4k.server.Http4kServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 import org.koin.core.context.startKoin
@@ -13,7 +12,7 @@ import org.litote.kmongo.getCollection
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ApplicationIntegrationTest: KoinTest, CardWalletContract() {
 
-    private val httpServer: Http4kServer by inject()
+    private val httpServer: CardWalletHttpServer by inject()
 
     private val mongoDb: MongoDbDockerContainer = MongoDbDockerContainer
 
