@@ -10,7 +10,7 @@ fun createCardWalletNoSqlRepository(mongoConfig: MongoDbProperties): CardWalletR
     return CardWalletNoSqlRepository(createMongoDbClient(mongoConfig))
 }
 
-class CardWalletNoSqlRepository(mongoClient: MongoClient): CardWalletRepositoryPort {
+class CardWalletNoSqlRepository internal constructor(mongoClient: MongoClient): CardWalletRepositoryPort {
 
     private val walletsCol: MongoCollection<Wallet> =
         mongoClient.getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)
