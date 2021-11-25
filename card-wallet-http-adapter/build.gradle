@@ -4,11 +4,14 @@ plugins {
 
 dependencies {
     implementation project(':card-wallet-domain')
-    api platform('org.http4k:http4k-bom:4.11.0.1')
-    api "org.http4k:http4k-core"
+    implementation platform('org.http4k:http4k-bom:4.11.0.1')
+    implementation "org.http4k:http4k-core"
     implementation "org.http4k:http4k-format-jackson"
 
     testFixturesImplementation project(':card-wallet-domain')
+    testFixturesImplementation platform('org.http4k:http4k-bom:4.11.0.1')
+    testFixturesImplementation "org.http4k:http4k-core"
+    testFixturesImplementation "org.http4k:http4k-format-jackson"
 
     testImplementation testFixtures(project(':card-wallet-domain'))
 }
