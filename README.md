@@ -74,7 +74,7 @@ concluding to excellent test coverage.
 With that regards, our demo project contains two contract tests -- one per port.
 Any adapter implementing/using a port will need to comply with the respective contract.
 
-## Structure of code
+## Structure of project
 
 The structure is a multi-module project that is broken down to:
 - core modules:
