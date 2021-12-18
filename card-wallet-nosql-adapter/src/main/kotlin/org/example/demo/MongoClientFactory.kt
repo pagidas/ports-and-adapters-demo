@@ -1,9 +1,17 @@
 package org.example.demo
 
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
+import org.bson.UuidRepresentation
 import org.litote.kmongo.KMongo
 
-internal fun createMongoDbClient(mongoConfig: MongoDbProperties): MongoClient = KMongo.createClient(mongoConfig.getUrl())
+internal fun createMongoDbClient(mongoConfig: MongoDbProperties): MongoClient =
+    KMongo.createClient(
+        MongoClientSettings.builder()
+            .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
+            .applyConnectionString(ConnectionString(mongoConfig.getUrl()))
+            .build())
 
 interface MongoDbProperties {
     fun getUrl(): String
