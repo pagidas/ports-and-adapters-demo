@@ -11,7 +11,7 @@ class CardWalletHttpTest: CardWalletContract() {
 
     private val httpServer: Http4kServer = CardWalletWebController(InMemoryCardWallet())
         .withFilter(ServerFilters.CatchLensFailure())
-        .asServer(SunHttp())
+        .asServer(SunHttp(0)) // 0 port means assigning to random port
 
     override val cardWallet: CardWalletPort =
         CardWalletHttpClientFactory.ofUri("http://localhost:${httpServer.port()}")
