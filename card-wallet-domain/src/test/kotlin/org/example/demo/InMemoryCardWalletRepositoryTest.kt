@@ -2,6 +2,8 @@ package org.example.demo
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.*
+import kotlin.NoSuchElementException
 
 class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
@@ -9,7 +11,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
     @Test
     fun `cannot save wallet that already exists`() {
-        val wallet = Wallet.empty(WalletId.random(), "John Doe")
+        val wallet = Wallet.empty(UUID.randomUUID(), "John Doe")
             .also { cardWalletRepo.save(it)}
 
         assertThrows<IllegalStateException> {
@@ -26,7 +28,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
     @Test
     fun `cannot update a wallet if it doesn't exist`() {
-        val wallet = Wallet.empty(WalletId.random(), "Kostas Akrivos")
+        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
 
         assertThrows<NoSuchElementException> {
             cardWalletRepo.update(wallet)

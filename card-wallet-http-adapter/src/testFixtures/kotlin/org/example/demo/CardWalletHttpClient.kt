@@ -27,19 +27,19 @@ class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
     override fun addPass(id: WalletId, newPass: Pass): Wallet {
         val response = http(
             Request(Method.POST, "/wallets/{walletId}/passes")
-            .with(walletIdPathLens of id, passLens of newPass))
+            .with(walletIdPathLens of id.value, passLens of newPass))
         return walletLens(response)
     }
 
     override fun getWalletById(id: WalletId): Wallet {
-        val response = http(Request(Method.GET, "/wallets/{walletId}").with(walletIdPathLens of id))
+        val response = http(Request(Method.GET, "/wallets/{walletId}").with(walletIdPathLens of id.value))
         return walletLens(response)
     }
 
     override fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
         val response = http(
             Request(Method.POST, "/wallets/{walletId}/passes/{passId}/debit")
-            .with(walletIdPathLens of walletId, passIdPathLens of passId, amountLens of amount))
+            .with(walletIdPathLens of walletId.value, passIdPathLens of passId.value, amountLens of amount))
         return when (response.status) {
             Status.OK -> Success(passLens(response))
             Status.UNPROCESSABLE_ENTITY -> Failure(notEnoughPointsLens(response))

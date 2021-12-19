@@ -1,5 +1,7 @@
 package org.example.demo
 
+import java.util.*
+
 /**
  * Use this to refer to domain implementation with in-memory database, easy for testing.
  */
@@ -14,5 +16,5 @@ private val passNames = listOf(
     "Waitrose - myWaitrose"
 )
 
-fun aPass(id: PassId = PassId.random(), points: Int = 0) =
+fun aPass(id: UUID = UUID.randomUUID(), points: Int = 0) =
     Pass(id, passNames.random(), "John Doe", points)

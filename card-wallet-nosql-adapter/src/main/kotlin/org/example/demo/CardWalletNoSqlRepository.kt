@@ -23,7 +23,7 @@ class CardWalletNoSqlRepository internal constructor(mongoClient: MongoClient): 
     override fun getAll(): List<Wallet> = walletsCol.find().toList()
 
     override fun getWalletById(id: WalletId): Wallet =
-        walletsCol.find().find { it.id == id }
+        walletsCol.find().find { it.id == id.value }
             ?: throw NoSuchElementException("Wallet record with key: $id does not exist.")
 
     override fun update(wallet: Wallet): Wallet {

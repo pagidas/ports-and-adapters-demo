@@ -5,10 +5,10 @@ class FakeCardWalletRepository: CardWalletRepositoryPort {
     private val wallets = mutableMapOf<WalletId, Wallet>()
 
     override fun save(wallet: Wallet): Wallet =
-        wallets.put(wallet.id, wallet).let { saved ->
+        wallets.put(WalletId(wallet.id), wallet).let { saved ->
             if (saved != null) {
-                wallets.remove(wallet.id)
-                throw IllegalStateException("Wallet record with key: ${wallet.id.value} already exists.")
+                wallets.remove(WalletId(wallet.id))
+                throw IllegalStateException("Wallet record with key: ${wallet.id} already exists.")
             }
             wallet
         }
@@ -19,9 +19,9 @@ class FakeCardWalletRepository: CardWalletRepositoryPort {
         wallets[id] ?: throw NoSuchElementException("Wallet record with key: $id does not exist.")
 
     override fun update(wallet: Wallet): Wallet =
-        wallets.put(wallet.id, wallet).let { saved ->
+        wallets.put(WalletId(wallet.id), wallet).let { saved ->
             if (saved == null) {
-                wallets.remove(wallet.id)
+                wallets.remove(WalletId(wallet.id))
                 throw NoSuchElementException("Wallet record with key: ${wallet.id} does not exist.")
             }
             saved

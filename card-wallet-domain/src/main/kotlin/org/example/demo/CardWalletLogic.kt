@@ -2,9 +2,10 @@ package org.example.demo
 
 import dev.forkhandles.result4k.Result4k
 import dev.forkhandles.result4k.peek
+import java.util.*
 
 class CardWalletLogic(
-    private val idFactory: () -> WalletId = { WalletId.random() },
+    private val idFactory: () -> UUID = { WalletId.random().value },
     private val repo: CardWalletRepositoryPort
 ): CardWalletPort {
 
@@ -24,7 +25,7 @@ class CardWalletLogic(
 
     override fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
         val wallet = repo.getWalletById(walletId)
-        val foundPass = wallet.passes.first { it.id == passId }
+        val foundPass = wallet.passes.first { it.id == passId.value }
         return foundPass.debit(amount).peek { updatedPass ->
             wallet.passes.remove(foundPass)
             wallet.passes.add(updatedPass)

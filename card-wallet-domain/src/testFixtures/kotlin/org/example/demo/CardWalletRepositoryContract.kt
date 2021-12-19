@@ -3,6 +3,7 @@ package org.example.demo
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Test
+import java.util.*
 
 abstract class CardWalletRepositoryContract {
 
@@ -10,9 +11,9 @@ abstract class CardWalletRepositoryContract {
 
     @Test
     fun `can persist wallets`() {
-        val wallet1 = Wallet.empty(WalletId.random(), "John Doe")
+        val wallet1 = Wallet.empty(UUID.randomUUID(), "John Doe")
             .also { cardWalletRepo.save(it)}
-        val wallet2 = Wallet.empty(WalletId.random(), "Jane Doe")
+        val wallet2 = Wallet.empty(UUID.randomUUID(), "Jane Doe")
             .also { cardWalletRepo.save(it)}
 
         assertThat(cardWalletRepo.getAll(), equalTo(listOf(wallet1, wallet2)))
@@ -20,17 +21,17 @@ abstract class CardWalletRepositoryContract {
 
     @Test
     fun `can fetch wallet by id`() {
-        val wallet = Wallet.empty(WalletId.random(), "Kostas Akrivos")
+        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
             .also { cardWalletRepo.save(it)}
 
-        assertThat(cardWalletRepo.getWalletById(wallet.id), equalTo(wallet))
+        assertThat(cardWalletRepo.getWalletById(WalletId(wallet.id)), equalTo(wallet))
     }
 
     @Test
     fun `can update a wallet`() {
-        val wallet = Wallet.empty(WalletId.random(), "Kostas Akrivos")
+        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
             .also { cardWalletRepo.save(it) }
-        val pass = Pass(PassId.random(), "Tesco Clubcard", "Kostas Akrivos",)
+        val pass = Pass(UUID.randomUUID(), "Tesco Clubcard", "Kostas Akrivos",)
         wallet.passes.add(pass)
 
         val updatedWallet = cardWalletRepo.update(wallet)
