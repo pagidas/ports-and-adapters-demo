@@ -5,20 +5,21 @@ import dev.forkhandles.result4k.peek
 import java.util.*
 
 class CardWalletLogic(
-    private val idFactory: () -> UUID = { WalletId.random().value },
+    private val idFactory: () -> UUID = { WalletIdDomain.random().value },
     private val repo: CardWalletRepositoryPort
 ): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet =
-        Wallet.empty(idFactory(), walletHolder)
+        WalletDomain.empty(idFactory(), walletHolder)
+            .toDto()
             .also { repo.save(it) }
 
     override fun list(): List<Wallet> = repo.getAll()
 
     override fun addPass(id: WalletId, newPass: Pass): Wallet {
         val wallet = repo.getWalletById(id)
-        wallet.passes.add(newPass)
-        return repo.update(wallet)
+        val newWallet = wallet.copy(passes = wallet.passes + newPass)
+        return repo.update(newWallet)
     }
 
     override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
@@ -27,9 +28,10 @@ class CardWalletLogic(
         val wallet = repo.getWalletById(walletId)
         val foundPass = wallet.passes.first { it.id == passId.value }
         return foundPass.debit(amount).peek { updatedPass ->
-            wallet.passes.remove(foundPass)
-            wallet.passes.add(updatedPass)
-            repo.update(wallet)
+            val newPasses = wallet.passes.toMutableList()
+            newPasses.remove(foundPass)
+            newPasses.add(updatedPass)
+            repo.update(wallet.copy(passes = newPasses))
         }
     }
 }

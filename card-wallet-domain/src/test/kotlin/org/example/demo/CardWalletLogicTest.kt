@@ -43,6 +43,6 @@ class CardWalletLogicTest: CardWalletContract() {
         val updatedWallet = cardWallet.getWalletById(WalletId(wallet.id))
 
         assertThat(updatedWallet.passes.size, equalTo(1))
-        assertThat(updatedWallet.passes.first, equalTo(pass.copy(points = 10)))
+        assertThat(updatedWallet.passes.first(), equalTo(pass.copy(points = 10)))
     }
 }

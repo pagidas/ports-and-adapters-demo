@@ -5,11 +5,9 @@ import dev.forkhandles.result4k.Result4k
 import dev.forkhandles.result4k.Success
 import java.util.*
 
-typealias Passes = LinkedList<Pass>
-
-data class Wallet(val id: UUID, val walletHolder: String, val passes: Passes) {
+data class Wallet(val id: UUID, val walletHolder: String, val passes: List<Pass>) {
     companion object {
-        fun empty(id: UUID, walletHolder: String) = Wallet(id, walletHolder, LinkedList())
+        fun empty(id: UUID, walletHolder: String) = Wallet(id, walletHolder, emptyList())
     }
 }
 data class WalletId(val value: UUID) {

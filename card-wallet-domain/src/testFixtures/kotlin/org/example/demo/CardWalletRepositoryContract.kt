@@ -32,9 +32,9 @@ abstract class CardWalletRepositoryContract {
         val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
             .also { cardWalletRepo.save(it) }
         val pass = Pass(UUID.randomUUID(), "Tesco Clubcard", "Kostas Akrivos",)
-        wallet.passes.add(pass)
+        val newPasses = wallet.passes + pass
 
-        val updatedWallet = cardWalletRepo.update(wallet)
+        val updatedWallet = cardWalletRepo.update(wallet.copy(passes = newPasses))
         val found = updatedWallet.passes.find { it.id == pass.id }
 
         assertThat(found, equalTo(pass))
