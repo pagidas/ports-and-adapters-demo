@@ -17,9 +17,12 @@ class CardWalletLogic(
     override fun list(): List<Wallet> = repo.getAll()
 
     override fun addPass(id: WalletId, newPass: Pass): Wallet {
-        val wallet = repo.getWalletById(id)
-        val newWallet = wallet.copy(passes = wallet.passes + newPass)
-        return repo.update(newWallet)
+        val wallet = repo.getWalletById(id).toDomain()
+        val pass = newPass.toDomain()
+
+        return wallet.addPass(pass)?.let { newWallet ->
+            repo.update(newWallet.toDto())
+        } ?: wallet.toDto()
     }
 
     override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
