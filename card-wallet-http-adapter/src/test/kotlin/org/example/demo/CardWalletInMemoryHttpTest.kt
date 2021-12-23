@@ -18,7 +18,7 @@ class CardWalletInMemoryHttpTest: CardWalletContract() {
     fun `can handle http to get a wallet by id`() {
         val wallet = cardWallet.createWallet("John Doe")
 
-        val foundWallet = cardWallet.getWalletById(WalletId(wallet.id))
+        val foundWallet = cardWallet.getWalletById(wallet.id)
 
         assertThat(foundWallet, equalTo(wallet))
     }

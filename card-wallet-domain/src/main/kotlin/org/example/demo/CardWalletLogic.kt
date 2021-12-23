@@ -18,7 +18,7 @@ class CardWalletLogic(
 
     override fun list(): List<Wallet> = repo.getAll()
 
-    override fun addPass(id: WalletId, newPass: Pass): Wallet {
+    override fun addPass(id: UUID, newPass: Pass): Wallet {
         val wallet = repo.getWalletById(id).toDomain()
         val pass = newPass.toDomain()
 
@@ -27,14 +27,14 @@ class CardWalletLogic(
         } ?: wallet.toDto()
     }
 
-    override fun getWalletById(id: WalletId): Wallet = repo.getWalletById(id)
+    override fun getWalletById(id: UUID): Wallet = repo.getWalletById(id)
 
-    override fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints> {
+    override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, NotEnoughPoints> {
         val wallet = repo.getWalletById(walletId).toDomain()
-        return wallet.debitPass(passId.value.toPassIdDomain(), DebitAmount(amount))
+        return wallet.debitPass(passId.toPassIdDomain(), DebitAmount(amount))
             .map { updatedWallet ->
                 repo.update(updatedWallet.toDto())
-                val debitedPass = updatedWallet.findPass(passId.value.toPassIdDomain())!!.toDto()
+                val debitedPass = updatedWallet.findPass(passId.toPassIdDomain())!!.toDto()
                 return Success(debitedPass)
             }
             .mapFailure { problem -> problem.toDtoFailure() }

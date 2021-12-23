@@ -9,6 +9,7 @@ import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.EMPTY_BSON
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.getCollection
+import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
@@ -29,7 +30,7 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
     @Test
     fun `cannot fetch wallet by id when doesn't exist`() {
         assertThrows<NoSuchElementException> {
-            cardWalletRepo.getWalletById(WalletId.random())
+            cardWalletRepo.getWalletById(UUID.randomUUID())
         }
     }
 

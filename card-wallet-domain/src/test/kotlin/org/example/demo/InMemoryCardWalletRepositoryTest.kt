@@ -3,7 +3,6 @@ package org.example.demo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
-import kotlin.NoSuchElementException
 
 class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
@@ -22,7 +21,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
     @Test
     fun `cannot fetch wallet by id when doesn't exist`() {
         assertThrows<NoSuchElementException> {
-            cardWalletRepo.getWalletById(WalletId.random())
+            cardWalletRepo.getWalletById(UUID.randomUUID())
         }
     }
 

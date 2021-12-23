@@ -1,25 +1,27 @@
 package org.example.demo
 
+import java.util.*
+
 class FakeCardWalletRepository: CardWalletRepositoryPort {
 
-    private val wallets = mutableMapOf<WalletId, Wallet>()
+    private val wallets = mutableMapOf<UUID, Wallet>()
 
     override fun save(wallet: Wallet): Wallet =
-        wallets.put(WalletId(wallet.id), wallet)?.let {
-            wallets.remove(WalletId(wallet.id))
+        wallets.put(wallet.id, wallet)?.let {
+            wallets.remove(wallet.id)
             throw IllegalStateException("Wallet record with key: ${wallet.id} already exists.")
         } ?: wallet
 
     override fun getAll(): List<Wallet> = wallets.values.toList()
 
-    override fun getWalletById(id: WalletId): Wallet =
+    override fun getWalletById(id: UUID): Wallet =
         wallets[id] ?: throw NoSuchElementException("Wallet record with key: $id does not exist.")
 
     override fun update(wallet: Wallet): Wallet =
-        wallets.put(WalletId(wallet.id), wallet)?.let {
+        wallets.put(wallet.id, wallet)?.let {
             wallet
         } ?: run {
-            wallets.remove(WalletId(wallet.id))
+            wallets.remove(wallet.id)
             throw NoSuchElementException("Wallet record with key: ${wallet.id} does not exist.")
         }
 }

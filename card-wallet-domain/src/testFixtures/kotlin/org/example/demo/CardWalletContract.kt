@@ -24,7 +24,7 @@ abstract class CardWalletContract {
         val wallet = givenNewWallet()
         val newPass = aPass()
 
-        val updatedWallet = cardWallet.addPass(WalletId(wallet.id), newPass)
+        val updatedWallet = cardWallet.addPass(wallet.id, newPass)
         val foundPass = updatedWallet.passes.find { it.id == newPass.id }
 
         assertThat(foundPass, equalTo(newPass))
@@ -35,7 +35,7 @@ abstract class CardWalletContract {
         val pass = aPass(points = 70)
         val wallet = givenWalletWithPass(pass)
 
-        val result =  cardWallet.debitPass(WalletId(wallet.id), PassId(pass.id), 50)
+        val result =  cardWallet.debitPass(wallet.id, pass.id, 50)
 
         assertThat(result.valueOrNull()?.points, equalTo(20))
     }
@@ -45,7 +45,7 @@ abstract class CardWalletContract {
         val pass = aPass(points = 50)
         val wallet = givenWalletWithPass(pass)
 
-        val result =  cardWallet.debitPass(WalletId(wallet.id), PassId(pass.id), 51)
+        val result =  cardWallet.debitPass(wallet.id, pass.id, 51)
 
         assertThat(result.failureOrNull(), equalTo(NotEnoughPoints(pass.id, 51, 50)))
     }
@@ -54,6 +54,6 @@ abstract class CardWalletContract {
 
     private fun givenWalletWithPass(aPass: Pass): Wallet =
         cardWallet.createWallet("John Doe").also {
-            cardWallet.addPass(WalletId(it.id), aPass)
+            cardWallet.addPass(it.id, aPass)
         }
 }

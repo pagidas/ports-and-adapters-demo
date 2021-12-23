@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.updateOne
+import java.util.*
 
 fun createCardWalletNoSqlRepository(mongoConfig: MongoDbProperties): CardWalletRepositoryPort {
     return CardWalletNoSqlRepository(createMongoDbClient(mongoConfig))
@@ -22,8 +23,8 @@ class CardWalletNoSqlRepository internal constructor(mongoClient: MongoClient): 
 
     override fun getAll(): List<Wallet> = walletsCol.find().toList()
 
-    override fun getWalletById(id: WalletId): Wallet =
-        walletsCol.find().find { it.id == id.value }
+    override fun getWalletById(id: UUID): Wallet =
+        walletsCol.find().find { it.id == id }
             ?: throw NoSuchElementException("Wallet record with key: $id does not exist.")
 
     override fun update(wallet: Wallet): Wallet {

@@ -24,7 +24,7 @@ abstract class CardWalletRepositoryContract {
         val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
             .also { cardWalletRepo.save(it)}
 
-        assertThat(cardWalletRepo.getWalletById(WalletId(wallet.id)), equalTo(wallet))
+        assertThat(cardWalletRepo.getWalletById(wallet.id), equalTo(wallet))
     }
 
     @Test
