@@ -11,9 +11,9 @@ abstract class CardWalletRepositoryContract {
 
     @Test
     fun `can persist wallets`() {
-        val wallet1 = Wallet.empty(UUID.randomUUID(), "John Doe")
+        val wallet1 = WalletBuilder().build()
             .also { cardWalletRepo.save(it)}
-        val wallet2 = Wallet.empty(UUID.randomUUID(), "Jane Doe")
+        val wallet2 = WalletBuilder().build()
             .also { cardWalletRepo.save(it)}
 
         assertThat(cardWalletRepo.getAll(), equalTo(listOf(wallet1, wallet2)))
@@ -21,7 +21,7 @@ abstract class CardWalletRepositoryContract {
 
     @Test
     fun `can fetch wallet by id`() {
-        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
+        val wallet = WalletBuilder(walletHolder = "Kostas Akrivos").build()
             .also { cardWalletRepo.save(it)}
 
         assertThat(cardWalletRepo.getWalletById(wallet.id), equalTo(wallet))
@@ -29,12 +29,12 @@ abstract class CardWalletRepositoryContract {
 
     @Test
     fun `can update a wallet`() {
-        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
+        val wallet = WalletBuilder(walletHolder = "Kostas Akrivos").build()
             .also { cardWalletRepo.save(it) }
         val pass = Pass(UUID.randomUUID(), "Tesco Clubcard", "Kostas Akrivos",)
-        val newPasses = wallet.passes + pass
+        val newWallet = wallet.copy(passes = wallet.passes + pass)
 
-        val updatedWallet = cardWalletRepo.update(wallet.copy(passes = newPasses))
+        val updatedWallet = cardWalletRepo.update(newWallet)
         val found = updatedWallet.passes.find { it.id == pass.id }
 
         assertThat(found, equalTo(pass))

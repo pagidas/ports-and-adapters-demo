@@ -36,7 +36,7 @@ class CardWalletLogicTest: CardWalletContract() {
     @Test
     fun `can remove old pass from wallet when debiting points`() {
         val wallet = cardWallet.createWallet("Kostas Akrivos")
-        val pass = aPass(points = 20)
+        val pass = PassBuilder(points = 20).build()
         cardWallet.addPass(wallet.id, pass)
 
         cardWallet.debitPass(wallet.id, pass.id, 10)

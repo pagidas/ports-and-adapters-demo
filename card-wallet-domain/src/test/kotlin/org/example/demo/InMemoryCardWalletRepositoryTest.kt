@@ -10,7 +10,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
     @Test
     fun `cannot save wallet that already exists`() {
-        val wallet = Wallet.empty(UUID.randomUUID(), "John Doe")
+        val wallet = WalletBuilder(walletHolder = "John Doe").build()
             .also { cardWalletRepo.save(it)}
 
         assertThrows<IllegalStateException> {
@@ -27,7 +27,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
     @Test
     fun `cannot update a wallet if it doesn't exist`() {
-        val wallet = Wallet.empty(UUID.randomUUID(), "Kostas Akrivos")
+        val wallet = WalletBuilder(walletHolder = "Kostas Akrivos").build()
 
         assertThrows<NoSuchElementException> {
             cardWalletRepo.update(wallet)
