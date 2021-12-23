@@ -21,6 +21,8 @@ internal data class WalletDomain(val id: WalletIdDomain, val walletHolder: Strin
         fun empty(id: UUID, walletHolder: String): WalletDomain = WalletDomain(WalletIdDomain(id), walletHolder, emptyList())
     }
 
+    fun findPass(passId: PassIdDomain): PassDomain? = passes.find { it.id == passId }
+
     fun addPass(pass: PassDomain): WalletDomain? =
         passes.find { it.id == pass.id }.let {
             if (it == null) copy(passes = passes + pass) else null
