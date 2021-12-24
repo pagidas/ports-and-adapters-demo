@@ -8,7 +8,6 @@ import org.example.demo.CardWalletJackson.auto
 import org.http4k.core.*
 import org.http4k.format.ConfigurableJackson
 import org.http4k.format.asConfigurable
-import org.http4k.format.uuid
 import org.http4k.format.withStandardMappings
 import org.http4k.lens.Path
 import org.http4k.lens.uuid
@@ -19,8 +18,6 @@ import org.http4k.routing.routes
 private object CardWalletJackson: ConfigurableJackson(KotlinModule()
     .asConfigurable()
     .withStandardMappings()
-    .uuid(::WalletId, WalletId::value)
-    .uuid(::PassId, PassId::value)
     .done()
     .deactivateDefaultTyping()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

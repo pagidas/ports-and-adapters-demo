@@ -7,7 +7,5 @@ data class Wallet(val id: UUID, val walletHolder: String, val passes: List<Pass>
         fun empty(id: UUID, walletHolder: String) = Wallet(id, walletHolder, emptyList())
     }
 }
-data class WalletId(val value: UUID)
 data class Pass(val id: UUID, val passName: String, val passHolder: String, val points: Int = 0)
-data class PassId(val value: UUID)
 data class NotEnoughPoints(val passId: UUID, val debitAmount: Int, val balance: Int)
