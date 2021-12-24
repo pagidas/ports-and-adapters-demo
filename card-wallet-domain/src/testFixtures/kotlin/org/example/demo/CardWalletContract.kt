@@ -47,7 +47,23 @@ abstract class CardWalletContract {
 
         val result =  cardWallet.debitPass(wallet.id, pass.id, 51)
 
-        assertThat(result.failureOrNull(), equalTo(NotEnoughPoints(pass.id, 51, 50)))
+        val error = WalletErrorBuilder.ofPass(pass)
+            .withNotEnoughPointsIssue(debitAmount = 51, balance = 50)
+            .build()
+        assertThat(result.failureOrNull(), equalTo(error))
+    }
+
+    @Test
+    fun `can not debit pass when not found`() {
+        val wallet = givenNewWallet()
+        val pass = PassBuilder(points = 50).build()
+
+        val result = cardWallet.debitPass(wallet.id, pass.id, 50)
+
+        val error = WalletErrorBuilder.ofPass(pass)
+            .withPassNotFoundIssue()
+            .build()
+        assertThat(result.failureOrNull(), equalTo(error))
     }
 
     private fun givenNewWallet(walletHolder: String = "John Doe"): Wallet = cardWallet.createWallet(walletHolder)

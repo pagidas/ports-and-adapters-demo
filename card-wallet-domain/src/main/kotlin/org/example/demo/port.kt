@@ -11,7 +11,7 @@ interface CardWalletPort {
     fun list(): List<Wallet>
     fun addPass(id: UUID, newPass: Pass): Wallet
     fun getWalletById(id: UUID): Wallet
-    fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, NotEnoughPoints>
+    fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, WalletError>
 }
 
 /**

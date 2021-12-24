@@ -1,10 +1,17 @@
 package org.example.demo
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.forkhandles.result4k.map
 import dev.forkhandles.result4k.recover
 import org.example.demo.CardWalletJackson.auto
+import org.example.demo.CardWalletJacksonDefaultTyping.polymorphicTypeValidator
+import org.example.demo.WalletError.WalletIssue.NotEnoughPoints
+import org.example.demo.WalletError.WalletIssue.PassNotFound
 import org.http4k.core.*
 import org.http4k.format.ConfigurableJackson
 import org.http4k.format.asConfigurable
@@ -15,11 +22,18 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 
+private object CardWalletJacksonDefaultTyping {
+    val polymorphicTypeValidator: PolymorphicTypeValidator = BasicPolymorphicTypeValidator.builder()
+        .allowIfBaseType(WalletError.WalletIssue::class.java)
+        .allowIfBaseType(Collection::class.java)
+        .build()
+}
+
 private object CardWalletJackson: ConfigurableJackson(KotlinModule()
     .asConfigurable()
     .withStandardMappings()
     .done()
-    .deactivateDefaultTyping()
+    .activateDefaultTyping(polymorphicTypeValidator, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 )
 
@@ -30,7 +44,7 @@ val walletIdPathLens = Path.uuid().of("walletId")
 val passLens = Body.auto<Pass>().toLens()
 val passIdPathLens = Path.uuid().of("passId")
 val amountLens = Body.auto<Int>().toLens()
-val notEnoughPointsLens = Body.auto<NotEnoughPoints>().toLens()
+val walletError = Body.auto<WalletError>().toLens()
 val healthCheckLens = Body.auto<Map<String, String>>().toLens()
 
 internal object CardWalletWebController {
@@ -84,7 +98,11 @@ internal object CardWalletWebController {
             cardWallet.debitPass(walletId, passId, amount)
                 .map { updatedPass: Pass ->
                     Response(Status.OK).with(passLens of updatedPass) }
-                .recover { failure: NotEnoughPoints ->
-                    Response(Status.UNPROCESSABLE_ENTITY).with(notEnoughPointsLens of failure) }
+                .recover { failure: WalletError ->
+                    when (failure.data) {
+                        is NotEnoughPoints -> Response(Status.UNPROCESSABLE_ENTITY).with(walletError of failure)
+                        is PassNotFound -> Response(Status.NOT_FOUND).with(walletError of failure)
+                    }
+                }
         }
 }

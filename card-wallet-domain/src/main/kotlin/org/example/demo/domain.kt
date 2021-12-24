@@ -38,7 +38,7 @@ internal data class WalletDomain(val id: WalletIdDomain, val walletHolder: Strin
                     }
                 Success(copy(passes = newPasses))
             } ?: Failure(PassNotEnoughPoints(passId, amount, foundPass.balance))
-        } ?: Failure(PassNotFound)
+        } ?: Failure(PassNotFound(passId))
 }
 
 internal data class PassDomain(
@@ -87,5 +87,5 @@ internal sealed class WalletProblem {
         }
     }
 
-    object PassNotFound: WalletProblem()
+    data class PassNotFound(val passId: PassIdDomain): WalletProblem()
 }

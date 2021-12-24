@@ -29,7 +29,7 @@ class CardWalletLogic(
 
     override fun getWalletById(id: UUID): Wallet = repo.getWalletById(id)
 
-    override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, NotEnoughPoints> {
+    override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, WalletError> {
         val wallet = repo.getWalletById(walletId).toDomain()
         return wallet.debitPass(passId.toPassIdDomain(), DebitAmount(amount))
             .map { updatedWallet ->

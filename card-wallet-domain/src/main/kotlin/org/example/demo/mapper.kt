@@ -1,15 +1,21 @@
 package org.example.demo
 
+import org.example.demo.WalletError.WalletIssue.NotEnoughPoints
+import org.example.demo.WalletError.WalletIssue.PassNotFound
 import java.util.*
+
+private const val PASS_NOT_ENOUGH_POINTS_ERROR_MSG = "Insufficient balance."
+private const val PASS_NOT_FOUND_ERROR_MSG = "Pass not found."
 
 // mapping domain to DTOs
 internal fun WalletDomain.toDto(): Wallet = Wallet(id.value, walletHolder, passes.map(PassDomain::toDto))
 internal fun PassDomain.toDto(): Pass = Pass(id.value, passName, passHolder, balance.value)
-internal fun WalletProblem.toDtoFailure(): NotEnoughPoints {
+internal fun WalletProblem.toDtoFailure(): WalletError {
     return when(this) {
-        is WalletProblem.PassNotEnoughPoints -> NotEnoughPoints(passId.value, debitAmount.value, balance.value)
-        // TODO: 23/12/2021 Handle this scenario by expanding the api to include a more open problem.
-        is WalletProblem.PassNotFound -> throw IllegalStateException()
+        is WalletProblem.PassNotEnoughPoints ->
+            WalletError(PASS_NOT_ENOUGH_POINTS_ERROR_MSG, NotEnoughPoints(passId.value, debitAmount.value, balance.value))
+        is WalletProblem.PassNotFound ->
+            WalletError(PASS_NOT_FOUND_ERROR_MSG, PassNotFound(passId.value))
     }
 }
 

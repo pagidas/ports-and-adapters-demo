@@ -37,13 +37,14 @@ class CardWalletHttpClient(private val http: HttpHandler): CardWalletPort {
         return walletLens(response)
     }
 
-    override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, NotEnoughPoints> {
+    override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, WalletError> {
         val response = http(
             Request(Method.POST, "/wallets/{walletId}/passes/{passId}/debit")
             .with(walletIdPathLens of walletId, passIdPathLens of passId, amountLens of amount))
         return when (response.status) {
             Status.OK -> Success(passLens(response))
-            Status.UNPROCESSABLE_ENTITY -> Failure(notEnoughPointsLens(response))
+            Status.UNPROCESSABLE_ENTITY -> Failure(walletError(response))
+            Status.NOT_FOUND -> Failure(walletError(response))
             else -> throw RuntimeException("Not expected result response: $response")
         }
     }
