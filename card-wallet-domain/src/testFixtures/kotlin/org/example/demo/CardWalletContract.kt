@@ -31,6 +31,15 @@ abstract class CardWalletContract {
     }
 
     @Test
+    fun `can not add a pass to a wallet when pass not found`() {
+        val wallet = givenWalletWithPass(PassBuilder().build())
+
+        val notUpdatedWallet = cardWallet.addPass(wallet.id, wallet.passes.random())
+
+        assertThat(notUpdatedWallet, equalTo(wallet))
+    }
+
+    @Test
     fun `can debit pass points`() {
         val pass = PassBuilder(points = 70).build()
         val wallet = givenWalletWithPass(pass)
@@ -68,8 +77,8 @@ abstract class CardWalletContract {
 
     private fun givenNewWallet(walletHolder: String = "John Doe"): Wallet = cardWallet.createWallet(walletHolder)
 
-    private fun givenWalletWithPass(aPass: Pass): Wallet =
-        cardWallet.createWallet("John Doe").also {
-            cardWallet.addPass(it.id, aPass)
-        }
+    private fun givenWalletWithPass(aPass: Pass): Wallet {
+        val wallet = cardWallet.createWallet("John Doe")
+        return cardWallet.addPass(wallet.id, aPass)
+    }
 }
