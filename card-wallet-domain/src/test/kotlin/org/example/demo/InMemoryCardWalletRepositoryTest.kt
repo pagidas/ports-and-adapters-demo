@@ -2,6 +2,7 @@ package org.example.demo
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
@@ -9,7 +10,7 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
     @Test
     fun `cannot save wallet that already exists`() {
-        val wallet = Wallet.empty(WalletId.random(), "John Doe")
+        val wallet = WalletBuilder(walletHolder = "John Doe").build()
             .also { cardWalletRepo.save(it)}
 
         assertThrows<IllegalStateException> {
@@ -20,13 +21,13 @@ class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
     @Test
     fun `cannot fetch wallet by id when doesn't exist`() {
         assertThrows<NoSuchElementException> {
-            cardWalletRepo.getWalletById(WalletId.random())
+            cardWalletRepo.getWalletById(UUID.randomUUID())
         }
     }
 
     @Test
     fun `cannot update a wallet if it doesn't exist`() {
-        val wallet = Wallet.empty(WalletId.random(), "Kostas Akrivos")
+        val wallet = WalletBuilder(walletHolder = "Kostas Akrivos").build()
 
         assertThrows<NoSuchElementException> {
             cardWalletRepo.update(wallet)

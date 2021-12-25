@@ -22,7 +22,7 @@ abstract class CardWalletContract {
     @Test
     fun `can add a pass to a wallet`() {
         val wallet = givenNewWallet()
-        val newPass = aPass()
+        val newPass = PassBuilder().build()
 
         val updatedWallet = cardWallet.addPass(wallet.id, newPass)
         val foundPass = updatedWallet.passes.find { it.id == newPass.id }
@@ -31,8 +31,17 @@ abstract class CardWalletContract {
     }
 
     @Test
+    fun `can not add a pass to a wallet when pass not found`() {
+        val wallet = givenWalletWithPass(PassBuilder().build())
+
+        val notUpdatedWallet = cardWallet.addPass(wallet.id, wallet.passes.random())
+
+        assertThat(notUpdatedWallet, equalTo(wallet))
+    }
+
+    @Test
     fun `can debit pass points`() {
-        val pass = aPass(points = 70)
+        val pass = PassBuilder(points = 70).build()
         val wallet = givenWalletWithPass(pass)
 
         val result =  cardWallet.debitPass(wallet.id, pass.id, 50)
@@ -42,18 +51,34 @@ abstract class CardWalletContract {
 
     @Test
     fun `can not debit more than balance`() {
-        val pass = aPass(points = 50)
+        val pass = PassBuilder(points = 50).build()
         val wallet = givenWalletWithPass(pass)
 
         val result =  cardWallet.debitPass(wallet.id, pass.id, 51)
 
-        assertThat(result.failureOrNull(), equalTo(NotEnoughPoints(pass.id, 51, 50)))
+        val error = WalletErrorBuilder.ofPass(pass)
+            .withNotEnoughPointsIssue(debitAmount = 51, balance = 50)
+            .build()
+        assertThat(result.failureOrNull(), equalTo(error))
+    }
+
+    @Test
+    fun `can not debit pass when not found`() {
+        val wallet = givenNewWallet()
+        val pass = PassBuilder(points = 50).build()
+
+        val result = cardWallet.debitPass(wallet.id, pass.id, 50)
+
+        val error = WalletErrorBuilder.ofPass(pass)
+            .withPassNotFoundIssue()
+            .build()
+        assertThat(result.failureOrNull(), equalTo(error))
     }
 
     private fun givenNewWallet(walletHolder: String = "John Doe"): Wallet = cardWallet.createWallet(walletHolder)
 
-    private fun givenWalletWithPass(aPass: Pass): Wallet =
-        cardWallet.createWallet("John Doe").also {
-            cardWallet.addPass(it.id, aPass)
-        }
+    private fun givenWalletWithPass(aPass: Pass): Wallet {
+        val wallet = cardWallet.createWallet("John Doe")
+        return cardWallet.addPass(wallet.id, aPass)
+    }
 }

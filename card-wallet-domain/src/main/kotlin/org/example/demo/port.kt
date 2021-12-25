@@ -1,6 +1,7 @@
 package org.example.demo
 
 import dev.forkhandles.result4k.Result4k
+import java.util.*
 
 /**
  * Primary/driving/input port that shapes how to communicate with the domain.
@@ -8,9 +9,9 @@ import dev.forkhandles.result4k.Result4k
 interface CardWalletPort {
     fun createWallet(walletHolder: String): Wallet
     fun list(): List<Wallet>
-    fun addPass(id: WalletId, newPass: Pass): Wallet
-    fun getWalletById(id: WalletId): Wallet
-    fun debitPass(walletId: WalletId, passId: PassId, amount: Int): Result4k<Pass, NotEnoughPoints>
+    fun addPass(id: UUID, newPass: Pass): Wallet
+    fun getWalletById(id: UUID): Wallet
+    fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, WalletError>
 }
 
 /**
@@ -19,7 +20,7 @@ interface CardWalletPort {
 interface CardWalletRepositoryPort {
     fun save(wallet: Wallet): Wallet
     fun getAll(): List<Wallet>
-    fun getWalletById(id: WalletId): Wallet
+    fun getWalletById(id: UUID): Wallet
     fun update(wallet: Wallet): Wallet
 }
 

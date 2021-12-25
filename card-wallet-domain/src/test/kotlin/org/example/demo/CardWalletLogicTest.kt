@@ -8,11 +8,11 @@ import java.util.*
 
 class CardWalletLogicTest: CardWalletContract() {
 
-    private val walletId: WalletId
+    private val walletId: UUID
     override val cardWallet: CardWalletPort
 
     init {
-        walletId = WalletId(UUID.fromString("ded99ee0-d211-4d9e-a5c1-d69a98fc2040"))
+        walletId = UUID.fromString("ded99ee0-d211-4d9e-a5c1-d69a98fc2040")
         cardWallet = CardWalletLogic({ walletId }, FakeCardWalletRepository())
     }
 
@@ -36,13 +36,13 @@ class CardWalletLogicTest: CardWalletContract() {
     @Test
     fun `can remove old pass from wallet when debiting points`() {
         val wallet = cardWallet.createWallet("Kostas Akrivos")
-        val pass = aPass(points = 20)
+        val pass = PassBuilder(points = 20).build()
         cardWallet.addPass(wallet.id, pass)
 
         cardWallet.debitPass(wallet.id, pass.id, 10)
         val updatedWallet = cardWallet.getWalletById(wallet.id)
 
         assertThat(updatedWallet.passes.size, equalTo(1))
-        assertThat(updatedWallet.passes.first, equalTo(pass.copy(points = 10)))
+        assertThat(updatedWallet.passes.first(), equalTo(pass.copy(points = 10)))
     }
 }
