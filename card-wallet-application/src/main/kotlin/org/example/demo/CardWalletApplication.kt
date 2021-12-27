@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val module = module {
     single<MongoDbProperties> { MongoDbConfig(port = getProperty("mongo_db_port").toInt()) }
     single { createCardWalletNoSqlRepository(get()) }
-    single<CardWalletPort> { CardWalletLogic(repo = get()) }
+    single<CardWalletPort> { CardWalletLogic(storage = get()) }
     single { CardWalletHttpServer(get()) }
 }
 

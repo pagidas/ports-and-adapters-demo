@@ -8,32 +8,32 @@ import java.util.*
 
 class CardWalletLogic(
     private val idFactory: () -> UUID = { WalletIdDomain.random().value },
-    private val repo: CardWalletRepositoryPort
+    private val storage: CardWalletStoragePort
 ): CardWalletPort {
 
     override fun createWallet(walletHolder: String): Wallet =
         WalletDomain.empty(idFactory(), walletHolder)
             .toDto()
-            .also { repo.save(it) }
+            .also { storage.save(it) }
 
-    override fun list(): List<Wallet> = repo.getAll()
+    override fun list(): List<Wallet> = storage.getAll()
 
     override fun addPass(id: UUID, newPass: Pass): Wallet {
-        val wallet = repo.getWalletById(id).toDomain()
+        val wallet = storage.getWalletById(id).toDomain()
         val pass = newPass.toDomain()
 
         return wallet.addPass(pass)?.let { newWallet ->
-            repo.update(newWallet.toDto())
+            storage.update(newWallet.toDto())
         } ?: wallet.toDto()
     }
 
-    override fun getWalletById(id: UUID): Wallet = repo.getWalletById(id)
+    override fun getWalletById(id: UUID): Wallet = storage.getWalletById(id)
 
     override fun debitPass(walletId: UUID, passId: UUID, amount: Int): Result4k<Pass, WalletError> {
-        val wallet = repo.getWalletById(walletId).toDomain()
+        val wallet = storage.getWalletById(walletId).toDomain()
         return wallet.debitPass(passId.toPassIdDomain(), DebitAmount(amount))
             .map { updatedWallet ->
-                repo.update(updatedWallet.toDto())
+                storage.update(updatedWallet.toDto())
                 val debitedPass = updatedWallet.findPass(passId.toPassIdDomain())!!.toDto()
                 return Success(debitedPass)
             }

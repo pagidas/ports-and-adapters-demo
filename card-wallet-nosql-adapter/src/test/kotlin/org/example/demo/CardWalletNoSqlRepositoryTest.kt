@@ -20,7 +20,7 @@ class CardWalletNoSqlRepositoryTest: CardWalletRepositoryContract() {
         override fun getUrl(): String = "mongodb://localhost:${mongoDb.port}"
     }
 
-    override val cardWalletRepo: CardWalletRepositoryPort = createCardWalletNoSqlRepository(mongoConfig)
+    override val cardWalletRepo: CardWalletStoragePort = createCardWalletNoSqlRepository(mongoConfig)
 
     @AfterEach
     fun clean() {

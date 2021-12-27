@@ -6,7 +6,7 @@ import java.util.*
 
 class InMemoryCardWalletRepositoryTest: CardWalletRepositoryContract() {
 
-    override val cardWalletRepo: CardWalletRepositoryPort = FakeCardWalletRepository()
+    override val cardWalletRepo: CardWalletStoragePort = FakeCardWalletStorage()
 
     @Test
     fun `cannot save wallet that already exists`() {
