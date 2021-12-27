@@ -33,8 +33,10 @@ class CardWalletLogic(
         val wallet = storage.getWalletById(walletId).toDomain()
         return wallet.debitPass(passId.toPassIdDomain(), DebitAmount(amount))
             .map { updatedWallet ->
-                storage.update(updatedWallet.toDto())
-                val debitedPass = updatedWallet.findPass(passId.toPassIdDomain())!!.toDto()
+                val debitedPass = storage.update(updatedWallet.toDto())
+                    .toDomain()
+                    .findPass(passId.toPassIdDomain())!!
+                    .toDto()
                 return Success(debitedPass)
             }
             .mapFailure { problem -> problem.toDtoFailure() }
