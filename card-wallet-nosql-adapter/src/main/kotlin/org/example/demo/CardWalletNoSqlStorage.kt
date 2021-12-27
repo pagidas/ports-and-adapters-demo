@@ -7,11 +7,11 @@ import org.litote.kmongo.getCollection
 import org.litote.kmongo.updateOne
 import java.util.*
 
-fun createCardWalletNoSqlRepository(mongoConfig: MongoDbProperties): CardWalletRepositoryPort {
-    return CardWalletNoSqlRepository(createMongoDbClient(mongoConfig))
+fun createCardWalletNoSqlRepository(mongoConfig: MongoDbProperties): CardWalletStoragePort {
+    return CardWalletNoSqlStorage(createMongoDbClient(mongoConfig))
 }
 
-class CardWalletNoSqlRepository internal constructor(mongoClient: MongoClient): CardWalletRepositoryPort {
+class CardWalletNoSqlStorage internal constructor(mongoClient: MongoClient): CardWalletStoragePort {
 
     private val walletsCol: MongoCollection<Wallet> =
         mongoClient.getDatabase(MongoDbConfig.CARD_WALLET_DB_NAME).getCollection<Wallet>(MongoDbConfig.WALLETS_COLLECTION_NAME)

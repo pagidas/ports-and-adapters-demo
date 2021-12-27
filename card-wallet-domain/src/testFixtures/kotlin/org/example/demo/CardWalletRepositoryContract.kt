@@ -7,7 +7,7 @@ import java.util.*
 
 abstract class CardWalletRepositoryContract {
 
-    abstract val cardWalletRepo: CardWalletRepositoryPort
+    abstract val cardWalletRepo: CardWalletStoragePort
 
     @Test
     fun `can persist wallets`() {

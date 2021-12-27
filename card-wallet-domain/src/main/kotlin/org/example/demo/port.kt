@@ -17,7 +17,7 @@ interface CardWalletPort {
 /**
  * Secondary/driven/output port that shapes how domain stores the state.
  */
-interface CardWalletRepositoryPort {
+interface CardWalletStoragePort {
     fun save(wallet: Wallet): Wallet
     fun getAll(): List<Wallet>
     fun getWalletById(id: UUID): Wallet

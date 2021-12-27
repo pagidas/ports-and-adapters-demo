@@ -2,7 +2,7 @@ package org.example.demo
 
 import java.util.*
 
-class FakeCardWalletRepository: CardWalletRepositoryPort {
+class FakeCardWalletStorage: CardWalletStoragePort {
 
     private val wallets = mutableMapOf<UUID, Wallet>()
 
