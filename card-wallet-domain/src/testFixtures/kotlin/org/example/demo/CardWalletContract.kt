@@ -2,8 +2,7 @@ package org.example.demo
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import dev.forkhandles.result4k.failureOrNull
-import dev.forkhandles.result4k.valueOrNull
+import dev.forkhandles.result4k.get
 import org.junit.jupiter.api.Test
 
 abstract class CardWalletContract {
@@ -46,7 +45,7 @@ abstract class CardWalletContract {
 
         val result =  cardWallet.debitPass(wallet.id, pass.id, 50)
 
-        assertThat(result.valueOrNull()?.points, equalTo(20))
+        assertThat((result.get() as Pass).points, equalTo(20))
     }
 
     @Test
@@ -59,7 +58,7 @@ abstract class CardWalletContract {
         val error = WalletErrorBuilder.ofPass(pass)
             .withNotEnoughPointsIssue(debitAmount = 51, balance = 50)
             .build()
-        assertThat(result.failureOrNull(), equalTo(error))
+        assertThat(result.get() as WalletError, equalTo(error))
     }
 
     @Test
@@ -72,7 +71,7 @@ abstract class CardWalletContract {
         val error = WalletErrorBuilder.ofPass(pass)
             .withPassNotFoundIssue()
             .build()
-        assertThat(result.failureOrNull(), equalTo(error))
+        assertThat(result.get() as WalletError, equalTo(error))
     }
 
     private fun givenNewWallet(walletHolder: String = "John Doe"): Wallet = cardWallet.createWallet(walletHolder)
